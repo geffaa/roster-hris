@@ -19,6 +19,7 @@ use App\Http\Controllers\People\EmployeeController;
 use App\Http\Controllers\People\EmployeeImportController;
 use App\Http\Controllers\People\IdentifierRevealController;
 use App\Http\Controllers\People\OrgChartController;
+use App\Http\Controllers\Settings\TimeSettingsController;
 use App\Http\Controllers\Time\InboxController;
 use App\Http\Controllers\Time\LeaveCalendarController;
 use App\Http\Controllers\Time\TeamAttendanceController;
@@ -94,6 +95,13 @@ Route::middleware(['auth', 'company'])->group(function () {
             Route::post('{version}/discard', 'discard')->name('discard');
         });
         Route::get('audit-log', AuditLogController::class)->name('audit-log');
+        Route::prefix('settings/time')->name('settings.')->controller(TimeSettingsController::class)->group(function () {
+            Route::get('/', 'index')->name('time');
+            Route::post('patterns', 'savePattern')->name('patterns.store');
+            Route::put('patterns/{pattern}', 'savePattern')->name('patterns.update');
+            Route::post('leave-types', 'saveLeaveType')->name('leave-types.store');
+            Route::put('leave-types/{type}', 'saveLeaveType')->name('leave-types.update');
+        });
         Route::get('reports/export', [ReportController::class, 'export'])->middleware('throttle:20,1')->name('reports.export');
 
         Route::prefix('employees/import')->name('employees.import.')->controller(EmployeeImportController::class)->group(function () {

@@ -864,3 +864,18 @@ a.acard:hover{text-decoration:none;border-color:var(--line-strong)}
 @media (max-width:1100px){.attn3{grid-template-columns:minmax(0,1fr)}}
 .card-b.deptb{padding-top:0}
 @media (max-width:640px){.dreq li{flex-wrap:wrap;padding:var(--s4)}.dr-a{width:100%;justify-content:flex-end}.dwatch li,.dup li{padding:var(--s3) var(--s4)}}
+/* settings */
+.setwrap{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--s6);align-items:start}
+.setwrap:has(.setform){grid-template-columns:minmax(0,1fr) 380px}
+.setform{position:sticky;top:var(--s5)}
+.setform .stack{gap:var(--s4)}
+.setnote{padding-top:var(--s4)}
+.sm-badge{margin-left:var(--s2);height:22px;font-size:12px}
+.daychips{display:flex;flex-wrap:wrap;gap:var(--s2)}
+.daychips .fchip{height:32px;padding:0 10px}
+.swatches{display:flex;flex-wrap:wrap;gap:var(--s2)}
+.swatches button{width:30px;height:30px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px var(--line-strong);display:grid;place-items:center;color:#fff}
+.swatches button[aria-checked=true]{box-shadow:0 0 0 2px var(--text)}
+@media (max-width:1100px){.setwrap:has(.setform){grid-template-columns:minmax(0,1fr)}.setform{position:static}}
+.swt{text-align:left}
+.setwrap table.t td{white-space:nowrap}

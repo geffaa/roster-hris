@@ -176,7 +176,7 @@ const flagOf = (name: string) =>
             </nav>
 
             <div class="foot">
-                <Link class="sidelink" :href="route('profile.edit')"><Settings class="icon sm" /><span class="lbl">Settings</span></Link>
+                <Link class="sidelink" :href="can('employees.manage') ? route('settings.time') : route('profile.edit')"><Settings class="icon sm" /><span class="lbl">Settings</span></Link>
                 <Link class="sidelink" :href="route('logout')" method="post" as="button"><LogOut class="icon sm" /><span class="lbl">Log out</span></Link>
                 <div v-if="user" class="me">
                     <Avatar :name="user.name" size="sm" />
