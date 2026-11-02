@@ -65,20 +65,26 @@ Estimasi total: MVP inti (M1–M3) ±3 minggu paruh waktu; M1–M4 ±4 minggu; M
   - **Belum diuji:** web push di perangkat fisik Android/iOS. Alur langganan dan pengiriman sudah dites di level server.
 
 ## M5 — Asisten AI HR (opsional, ±3–4 hari)
-- [ ] Unggah dokumen kebijakan, potong teks + embedding (pgvector)
-- [ ] Tanya jawab kebijakan dengan kutipan; menolak di luar dokumen
-- [ ] Pertanyaan data pribadi ("sisa cuti saya") lewat tool terbatas pada akun login
-- [ ] Ringkasan anomali payroll untuk Payroll Officer
+- [x] Unggah dokumen kebijakan, potong teks + embedding (pgvector)
+- [x] Tanya jawab kebijakan dengan kutipan; menolak di luar dokumen
+- [x] Pertanyaan data pribadi ("sisa cuti saya") lewat tool terbatas pada akun login
+- [x] Ringkasan anomali payroll untuk Payroll Officer
 - **Verifikasi:** 20 pertanyaan uji berjawaban diketahui; tidak ada kebocoran antar-karyawan/antar-perusahaan.
+- **Status 2026-11-02:** M5 selesai.
+  - **Penyimpangan:** pencarian kebijakan memakai full-text search PostgreSQL (`simple`), bukan pgvector. Claude tidak menyediakan API embedding, dan dokumen kebijakan pendek; 20 dari 20 pertanyaan uji menemukan kebijakan yang benar di 3 hasil teratas.
+  - **Data pribadi:** disusun server khusus untuk akun yang login, bukan lewat tool yang bisa dipanggil model, jadi kebocoran antar-karyawan tidak mungkin terjadi secara struktur (ada tes).
+  - **Model:** `claude-opus-5-5` dengan `fallbacks: "default"`. Tanpa API key, asisten tampil dalam mode ekstraktif berlabel.
+  - **Ditambah:** klaim reimbursement (dari FEATURE-MAP), video 2 menit (`docs/demo.mp4`), studi kasus (`docs/CASE-STUDY.md`).
 
 ## Tambahan dari FEATURE-MAP (2026-10-31)
 Disisipkan ke milestone yang ada; estimasi MVP menjadi ±6 minggu paruh waktu.
 - [x] M1: org chart (departemen, atasan) dan impor karyawan CSV/XLSX dengan validasi baris
-- [ ] M2: mesin persetujuan bertingkat (tabel approvals, aturan per jenis permintaan) + kotak masuk Approvals; dipakai cuti, koreksi absensi
-- [ ] M2: alur lembur (pengajuan → persetujuan → jam lembur tercatat)
-- [ ] M3: lembur dan reimbursement masuk komponen payroll; reimbursement (foto struk, kategori dengan batas, persetujuan)
-- [ ] M4: dashboard HR (headcount, kehadiran hari ini, cuti berjalan, persetujuan menunggu, status payroll, kontrak habis) dan PWA diperluas (klaim, lembur)
+- [x] M2: mesin persetujuan bertingkat (tabel approvals, aturan per jenis permintaan) + kotak masuk Approvals; dipakai cuti, koreksi absensi
+- [x] M2: alur lembur (pengajuan → persetujuan → jam lembur tercatat)
+- [x] M3: lembur dan reimbursement masuk komponen payroll; reimbursement (foto struk, kategori dengan batas, persetujuan)
+- [x] M4: dashboard HR (headcount, kehadiran hari ini, cuti berjalan, persetujuan menunggu, status payroll, kontrak habis) dan PWA diperluas (klaim, lembur)
 - **Verifikasi:** setiap jenis permintaan melewati mesin persetujuan yang sama (tes); lembur dan klaim yang disetujui muncul di run payroll berikutnya.
 
 ## Definisi selesai
 Repo + README + demo (atau alasan ditunda) + tangkapan layar + studi kasus singkat + N-036 diperbarui.
+- **Status 2026-11-02:** repo lokal (git) + README + tangkapan layar + video + studi kasus selesai. Demo online ditunda karena butuh server PHP 8.5 + PostgreSQL; repo GitHub publik menunggu user membuatnya (pembuatan repo publik diblokir pemeriksa keamanan Claude Code).
