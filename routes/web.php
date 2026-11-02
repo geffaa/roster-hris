@@ -6,8 +6,10 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Insights\TimeReportController;
 use App\Http\Controllers\Me\MyAttendanceController;
 use App\Http\Controllers\Me\PayslipController;
+use App\Http\Controllers\Me\ProfileController;
 use App\Http\Controllers\Me\TimeOffController;
 use App\Http\Controllers\Me\TodayController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Pay\PayrollRunController;
 use App\Http\Controllers\Pay\RulePackController;
 use App\Http\Controllers\People\CompensationController;
@@ -51,6 +53,11 @@ Route::middleware(['auth', 'company'])->group(function () {
             Route::get('attendance', [MyAttendanceController::class, 'index'])->name('attendance');
             Route::post('attendance/{record}/correction', [MyAttendanceController::class, 'correct'])->name('attendance.correct');
             Route::post('overtime', [MyAttendanceController::class, 'overtime'])->name('overtime');
+            Route::get('profile', [ProfileController::class, 'show'])->name('profile');
+            Route::put('profile/contact', [ProfileController::class, 'contact'])->name('profile.contact');
+            Route::post('profile/bank', [ProfileController::class, 'bank'])->middleware('throttle:5,1')->name('profile.bank');
+            Route::delete('profile/bank/{change}', [ProfileController::class, 'cancelBank'])->name('profile.bank.cancel');
+            Route::put('locale', [ProfileController::class, 'locale'])->name('locale');
             Route::get('pay', [PayslipController::class, 'index'])->name('pay');
             Route::get('pay/{payslip}', [PayslipController::class, 'show'])->name('payslip');
             Route::get('pay/{payslip}/pdf', [PayslipController::class, 'pdf'])->middleware('throttle:30,1')->name('payslip.pdf');
@@ -58,6 +65,8 @@ Route::middleware(['auth', 'company'])->group(function () {
 
         // Managers and HR
         Route::get('inbox', [InboxController::class, 'index'])->name('inbox');
+        Route::get('notifications/{id}', [NotificationController::class, 'open'])->whereUuid('id')->name('notifications.open');
+        Route::post('notifications/read-all', [NotificationController::class, 'readAll'])->name('notifications.read-all');
         Route::post('approvals/{step}', [InboxController::class, 'decide'])->name('approvals.decide');
         Route::get('attendance', TeamAttendanceController::class)->name('attendance');
         Route::get('leave-calendar', LeaveCalendarController::class)->name('leave-calendar');

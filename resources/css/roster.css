@@ -785,3 +785,26 @@ a.payhero:hover{text-decoration:none;background:var(--brand-strong)}
 table.payt .delta{display:block;font-size:12px;color:var(--text-3)}
 table.payt .delta.up{color:var(--success)}table.payt .delta.down{color:var(--danger)}
 textarea.input,table.rpt textarea.input{height:auto;padding:8px 12px;line-height:1.45;resize:vertical}
+
+/* ===================== notifications + profile (M4) ===================== */
+.bell .dot{top:4px;right:3px}
+.bellpop{position:absolute;left:auto;right:0;top:calc(100% + 6px);width:min(380px,calc(100vw - 32px));z-index:50;padding:0;overflow:hidden}
+.bp-h{display:flex;align-items:center;justify-content:space-between;padding:var(--s3) var(--s4);border-bottom:1px solid var(--line)}
+.bp-empty{padding:var(--s5) var(--s4)}
+.bp-it{display:grid;grid-template-columns:auto 1fr auto;gap:var(--s3);align-items:start;padding:var(--s3) var(--s4);border-bottom:1px solid var(--line);color:var(--text)}
+.bp-it:last-child{border-bottom:0}
+.bp-it:hover{background:var(--surface-2);text-decoration:none}
+.bp-it.unread{background:var(--brand-tint)}
+.bp-it.unread .bp-t b::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--brand);margin-right:6px;vertical-align:2px}
+.bp-ic{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:var(--hover);color:var(--text-2)}
+.bp-ic.approval_needed{background:var(--warning-soft);color:var(--warning)}.bp-ic.request_approved,.bp-ic.payslip{background:var(--success-soft);color:var(--success)}.bp-ic.request_rejected{background:var(--danger-soft);color:var(--danger)}
+.bp-t b{display:block;font-size:14px;font-weight:600}
+.bp-t small{display:block;font-size:13px;color:var(--text-3);line-height:1.35;margin-top:2px}
+.ah .r{display:flex;align-items:center;gap:var(--s1)}
+@media (max-width:400px){.ah .co{display:none}}
+.bankcard{display:flex;gap:var(--s3);align-items:center;padding:var(--s3) var(--s4);border:1px solid var(--line);border-radius:var(--r);background:var(--surface-2)}
+.bankcard small{display:block;font-size:12px;color:var(--text-3)}
+.bankform{gap:var(--s4)}
+.why{display:flex;gap:6px;align-items:flex-start}.why .icon{margin-top:3px;flex:none}
+.lines dd.wrap{white-space:normal;overflow-wrap:anywhere;text-align:right}
+.popwrap > .pop.bellpop{left:auto;right:0;min-width:0;z-index:50}

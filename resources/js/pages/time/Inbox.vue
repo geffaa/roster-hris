@@ -3,7 +3,7 @@ import Avatar from '@/components/roster/Avatar.vue';
 import { formatDate, formatDateTime } from '@/composables/useRoster';
 import RosterLayout from '@/layouts/RosterLayout.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import { Check, CircleAlert, Clock3, Inbox, Plane, Repeat2, Timer, Wrench, X } from 'lucide-vue-next';
+import { Check, CircleAlert, Clock3, Inbox, Landmark, Plane, Repeat2, Timer, Wrench, X } from 'lucide-vue-next';
 import { ref } from 'vue';
 
 interface Item {
@@ -38,7 +38,7 @@ function decide(item: Item, decision: 'approve' | 'reject') {
     });
 }
 
-const icon = { leave: Plane, attendance_correction: Wrench, overtime: Timer };
+const icon: Record<string, unknown> = { leave: Plane, attendance_correction: Wrench, overtime: Timer, bank_change: Landmark };
 </script>
 
 <template>
@@ -54,7 +54,7 @@ const icon = { leave: Plane, attendance_correction: Wrench, overtime: Timer };
 
             <div class="grid-main">
                 <div class="stack">
-                    <div v-if="!items.length" class="card empty"><Inbox class="icon" /><b>You're all caught up</b><span>New leave, overtime and correction requests appear here.</span></div>
+                    <div v-if="!items.length" class="card empty"><Inbox class="icon" /><b>You're all caught up</b><span>New leave, overtime, correction and bank account requests appear here.</span></div>
                     <article v-for="item in items" :key="item.step_id" class="card req">
                         <div class="req-h">
                             <Avatar :name="item.requester.name" />

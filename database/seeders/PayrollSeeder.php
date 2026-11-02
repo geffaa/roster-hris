@@ -44,6 +44,12 @@ class PayrollSeeder extends Seeder
 
         $this->history($nk, 10, $payroll, $hr, thrMonth: 3);
         $this->history($nw, 10, $ukHr, $super);
+
+        // People have read their older payslip emails; only the latest month is new.
+        foreach (User::all() as $u) {
+            $latest = $u->notifications()->where('data->kind', 'payslip')->latest()->value('id');
+            $u->notifications()->where('data->kind', 'payslip')->where('id', '!=', $latest)->update(['read_at' => now()]);
+        }
     }
 
     /** @return array{0: RulePack, 1: RulePack} */

@@ -6,6 +6,7 @@ export interface RosterUser {
     role: string | null;
     employee_id: number | null;
     two_factor: boolean;
+    locale: 'en' | 'id';
 }
 
 export interface CompanyRef {
@@ -21,6 +22,7 @@ export interface RosterShared {
     company: CompanyRef | null;
     companies: CompanyRef[];
     flash: { success: string | null };
+    notifications: { unread: number; latest: RosterNotice[] };
     errors: Record<string, string>;
     [key: string]: unknown;
 }
@@ -33,4 +35,14 @@ export interface Paginated<T> {
     total: number;
     from: number | null;
     to: number | null;
+}
+
+export interface RosterNotice {
+    id: string;
+    kind: string;
+    title: string;
+    body: string;
+    url: string;
+    read: boolean;
+    at: string;
 }

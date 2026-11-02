@@ -6,10 +6,12 @@ use App\Enums\Permission;
 use App\Models\ApprovalRequest;
 use App\Models\ApprovalStep;
 use App\Models\AttendanceCorrection;
+use App\Models\BankAccountChange;
 use App\Models\Employee;
 use App\Models\LeaveRequest;
 use App\Models\OvertimeRequest;
 use App\Models\User;
+use App\Services\Notify;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use RuntimeException;
@@ -21,9 +23,12 @@ use RuntimeException;
  */
 class ApprovalService
 {
-    public function submit(string $type, Model $subject, Employee $requester, bool $hrStep = false): ApprovalRequest
+    public function __construct(private Notify $notify) {}
+
+    /** $hrOnly sends step 1 straight to the HR queue (used for bank account changes). */
+    public function submit(string $type, Model $subject, Employee $requester, bool $hrStep = false, bool $hrOnly = false): ApprovalRequest
     {
-        return DB::transaction(function () use ($type, $subject, $requester, $hrStep) {
+        return DB::transaction(function () use ($type, $subject, $requester, $hrStep, $hrOnly) {
             $request = ApprovalRequest::create([
                 'company_id' => $requester->company_id,
                 'type' => $type,
@@ -32,12 +37,13 @@ class ApprovalService
                 'requester_id' => $requester->id,
             ]);
 
-            [$approver, $delegatedFrom] = $this->approverFor($requester);
-            $request->steps()->create(['step' => 1, 'approver_id' => $approver?->id, 'delegated_from_id' => $delegatedFrom?->id, 'status' => 'pending']);
+            [$approver, $delegatedFrom] = $hrOnly ? [null, null] : $this->approverFor($requester);
+            $first = $request->steps()->create(['step' => 1, 'approver_id' => $approver?->id, 'delegated_from_id' => $delegatedFrom?->id, 'status' => 'pending']);
 
             if ($hrStep && $approver !== null) {
                 $request->steps()->create(['step' => 2, 'approver_id' => null, 'status' => 'waiting']);
             }
+            $this->notify->approvalNeeded($first, $request);
 
             return $request;
         });
@@ -94,6 +100,8 @@ class ApprovalService
             if ($next) {
                 $next->update(['status' => 'pending']);
                 $request->update(['current_step' => $next->step]);
+                $this->notify->settle($request);
+                $this->notify->approvalNeeded($next, $request);
 
                 return $request;
             }
@@ -101,6 +109,7 @@ class ApprovalService
             $request->update(['status' => $approve ? 'approved' : 'rejected', 'decided_at' => now()]);
             $request->steps()->where('status', 'waiting')->update(['status' => 'skipped']);
             $this->finalise($request, $approve);
+            $this->notify->decided($request, $approve, $comment);
 
             return $request;
         });
@@ -112,6 +121,9 @@ class ApprovalService
             return;
         }
         $request->update(['status' => 'cancelled', 'decided_at' => now()]);
+        if ($request->subject instanceof BankAccountChange) {
+            $request->subject->update(['status' => 'cancelled']);
+        }
         $request->steps()->whereIn('status', ['pending', 'waiting'])->update(['status' => 'skipped']);
     }
 
@@ -121,8 +133,18 @@ class ApprovalService
 
         match (true) {
             $subject instanceof LeaveRequest, $subject instanceof OvertimeRequest => $subject->update(['status' => $approved ? 'approved' : 'rejected']),
+            $subject instanceof BankAccountChange => $this->applyBankChange($subject, $approved),
             default => $this->applyCorrection($subject, $approved),
         };
+    }
+
+    /** Payroll uses the new account from the next calculation; the old number stays only in the encrypted audit trail. */
+    private function applyBankChange(BankAccountChange $change, bool $approved): void
+    {
+        $change->update(['status' => $approved ? 'approved' : 'rejected']);
+        if ($approved) {
+            $change->employee()->withoutGlobalScopes()->firstOrFail()->update(['bank_name' => $change->bank_name, 'bank_account' => $change->account_number]);
+        }
     }
 
     /** The record takes the corrected times; the original times stay on the correction row and in the audit log. */

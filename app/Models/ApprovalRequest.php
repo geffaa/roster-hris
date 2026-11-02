@@ -25,7 +25,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon $created_at
  * @property-read Employee $requester
  * @property-read Collection<int, ApprovalStep> $steps
- * @property-read LeaveRequest|AttendanceCorrection|OvertimeRequest $subject
+ * @property-read LeaveRequest|AttendanceCorrection|OvertimeRequest|BankAccountChange $subject
  */
 class ApprovalRequest extends Model
 {

@@ -9,6 +9,7 @@ use App\Models\Payslip;
 use App\Models\User;
 use App\Payroll\Money;
 use App\Payroll\PayrollCalculator;
+use App\Services\Notify;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -22,7 +23,7 @@ class PayrollRuns
     /** Net pay moving more than this against the previous month needs a reviewer's tick. */
     public const CHANGE_THRESHOLD = 0.20;
 
-    public function __construct(private PayslipInputBuilder $inputs, private PayrollCalculator $calculator, private RulePacks $packs) {}
+    public function __construct(private PayslipInputBuilder $inputs, private PayrollCalculator $calculator, private RulePacks $packs, private Notify $notify) {}
 
     public function create(Company $company, CarbonImmutable $month, bool $includeThr, User $by): PayrollRun
     {
@@ -142,12 +143,16 @@ class PayrollRuns
         if ($run->status !== 'locked') {
             throw ValidationException::withMessages(['run' => 'Lock the run before sending payslips.']);
         }
-        DB::transaction(function () use ($run) {
+        $slips = DB::transaction(function () use ($run) {
+            $slips = collect();
             foreach ($run->items()->get() as $item) {
-                Payslip::firstOrCreate(['payroll_item_id' => $item->id], ['company_id' => $run->company_id, 'employee_id' => $item->employee_id, 'published_at' => now()]);
+                $slips->push(Payslip::firstOrCreate(['payroll_item_id' => $item->id], ['company_id' => $run->company_id, 'employee_id' => $item->employee_id, 'published_at' => now()]));
             }
             $run->update(['status' => 'published', 'published_at' => now()]);
+
+            return $slips;
         });
+        $this->notify->payslipsPublished($slips, $run->period_start->format('F Y'));
     }
 
     /** @return array<string, int|string> */

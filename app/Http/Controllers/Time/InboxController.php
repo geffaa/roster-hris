@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ApprovalStep;
 use App\Models\AttendanceCorrection;
 use App\Models\AttendanceRecord;
+use App\Models\BankAccountChange;
 use App\Models\Employee;
 use App\Models\LeaveRequest;
 use App\Services\Time\ApprovalService;
@@ -33,7 +34,7 @@ class InboxController extends Controller
         $isHr = $user->can(Permission::EmployeesManage->value);
 
         return ApprovalStep::query()
-            ->with(['request.requester:id,full_name,job_title,manager_id', 'request.subject', 'delegatedFrom:id,full_name'])
+            ->with(['request.requester:id,full_name,job_title,manager_id,bank_name,bank_account_last4', 'request.subject', 'delegatedFrom:id,full_name'])
             ->where('status', 'pending')
             ->whereHas('request', fn ($q) => $q->where('company_id', $this->company->id())->where('status', 'pending'))
             ->where(function ($q) use ($mine, $isHr) {
@@ -113,6 +114,12 @@ class InboxController extends Controller
 
         return $base + match (true) {
             $subject instanceof LeaveRequest => $this->leaveDetail($subject),
+            $subject instanceof BankAccountChange => [
+                'title' => 'Bank account change',
+                'summary' => sprintf('%s ···· %s → %s ···· %s', $request->requester->bank_name ?? 'None', $request->requester->bank_account_last4 ?? '—', $subject->bank_name, $subject->account_last4),
+                'reason' => null,
+                'facts' => ['Holder: '.$subject->holder_name, 'Applies from the next payroll calculation'],
+            ],
             $subject instanceof AttendanceCorrection => [
                 'title' => 'Attendance correction',
                 'summary' => sprintf('%s · %s → %s–%s', CarbonImmutable::parse($subject->record()->withoutGlobalScopes()->value('work_date'))->format('D j M'),

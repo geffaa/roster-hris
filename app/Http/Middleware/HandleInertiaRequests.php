@@ -53,6 +53,7 @@ class HandleInertiaRequests extends Middleware
                     'role' => $company ? $user->roleInCurrentCompany()?->label() : null,
                     'employee_id' => $company ? $user->employee?->id : null,
                     'two_factor' => $user->hasTwoFactorEnabled(),
+                    'locale' => $user->locale ?? 'en',
                 ] : null,
                 'can' => $user && $company ? collect(Permission::cases())
                     ->mapWithKeys(fn (Permission $p) => [$p->value => $user->can($p->value)])->all() : [],
@@ -60,6 +61,11 @@ class HandleInertiaRequests extends Middleware
             'company' => $company?->only(['id', 'name', 'country_code', 'base_currency']),
             'companies' => fn () => $user ? $user->companies()->orderBy('name')->get(['companies.id', 'companies.name', 'companies.country_code']) : [],
             'inboxCount' => fn () => $user && $company ? app(InboxController::class)->pendingFor($request)->count() : 0,
+            'notifications' => fn () => $user && $company ? [
+                'unread' => $user->unreadNotifications()->where('data->company_id', $company->id)->count(),
+                'latest' => $user->notifications()->where('data->company_id', $company->id)->latest()->limit(8)->get()
+                    ->map(fn ($n) => ['id' => $n->id, ...$n->data, 'read' => $n->read_at !== null, 'at' => $n->created_at->toIso8601String()]),
+            ] : ['unread' => 0, 'latest' => []],
             'flash' => [
                 'success' => fn () => $request->session()->get('success'),
             ],

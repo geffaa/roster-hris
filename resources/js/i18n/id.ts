@@ -1,0 +1,38 @@
+import type { Dict } from './index';
+
+const id: Dict = {
+    nav: { today: 'Hari ini', timeOff: 'Cuti', attendance: 'Absensi', pay: 'Gaji', me: 'Saya', workspace: 'Buka ruang kerja' },
+    bell: { title: 'Notifikasi', empty: 'Belum ada yang baru. Persetujuan dan slip gaji akan muncul di sini.', readAll: 'Tandai sudah dibaca' },
+    me: {
+        title: 'Saya',
+        job: 'Jabatan',
+        details: 'Data kerja',
+        employeeNo: 'No. karyawan',
+        department: 'Departemen',
+        location: 'Lokasi',
+        manager: 'Atasan',
+        workEmail: 'Email kantor',
+        since: 'Mulai bekerja',
+        contact: 'Kontak',
+        phone: 'Nomor HP',
+        save: 'Simpan',
+        bank: 'Rekening untuk gaji',
+        noBank: 'Belum ada rekening. Payroll tidak bisa membayar gaji sebelum rekening ditambahkan.',
+        current: 'Rekening saat ini',
+        change: 'Ganti rekening',
+        bankName: 'Bank',
+        accountNumber: 'Nomor rekening',
+        holder: 'Nama pemilik rekening',
+        holderHint: 'Sesuai buku tabungan atau aplikasi bank.',
+        send: 'Kirim ke HR',
+        cancel: 'Batal',
+        pendingTitle: 'Menunggu HR',
+        pending: 'Rekening baru {bank} ···· {last4}, dikirim {date}. Payroll tetap memakai rekening lama sampai HR menyetujui.',
+        withdraw: 'Tarik kembali',
+        why: 'HR memeriksa setiap perubahan sebelum dipakai, supaya gaji Anda aman dari pengambilalihan rekening.',
+        language: 'Bahasa',
+        langHint: 'Dipakai di aplikasi ini, email, dan slip gaji.',
+        demo: 'Data demo sintetis.',
+    },
+};
+export default id;

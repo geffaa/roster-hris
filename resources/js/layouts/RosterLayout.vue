@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Avatar from '@/components/roster/Avatar.vue';
+import NotificationBell from '@/components/roster/NotificationBell.vue';
 import FlashToast from '@/components/roster/FlashToast.vue';
 import { useRoster } from '@/composables/useRoster';
 import { Link, router } from '@inertiajs/vue3';
@@ -192,6 +193,7 @@ const flagOf = (name: string) =>
                     <Search class="icon sm" /><span>Search people, requests, payslips…</span><kbd>⌘K</kbd>
                 </button>
                 <div class="tb-r">
+                    <NotificationBell />
                     <button class="ibtn" type="button" aria-label="Help"><CircleHelp class="icon" /></button>
                 </div>
             </header>
