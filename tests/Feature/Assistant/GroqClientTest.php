@@ -1,6 +1,7 @@
 <?php
 
 use App\Services\Assistant\GroqClient;
+use App\Services\Assistant\PayrollSummary;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -35,3 +36,11 @@ it('reports a failed request so the assistant can fall back', function () {
 
     app(GroqClient::class)->ask('x', [], 'y');
 })->throws(RuntimeException::class, 'HTTP 429');
+
+it('cleans unusual spaces and splits run-together bullets', function () {
+    expect(GroqClient::normalise("Net pay rose to IDR\u{202F}612,661,869 \u{2011} up"))->toBe('Net pay rose to IDR 612,661,869 - up')
+        ->and(PayrollSummary::points('- Net pay rose 2.5%. - Nadia +22% (bonus). - Salsabila has no bank account.'))
+        ->toBe(['Net pay rose 2.5%.', 'Nadia +22% (bonus).', 'Salsabila has no bank account.'])
+        ->and(PayrollSummary::points("- Decreases: Bayu - IDR 1,279,357 [1].\n- Check Nadia [1]."))
+        ->toBe(['Decreases: Bayu - IDR 1,279,357.', 'Check Nadia.']);
+});

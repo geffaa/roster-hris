@@ -26,7 +26,7 @@ class GroqClient
 
     /**
      * @param  list<array{title: string, text: string}>  $documents
-     * @return array{segments: list<array{text: string, cites: list<int>}>, model: string, stop: ?string, input_tokens: ?int, output_tokens: ?int}
+     * @return array{text: string, segments: list<array{text: string, cites: list<int>}>, model: string, stop: ?string, input_tokens: ?int, output_tokens: ?int}
      */
     public function ask(string $system, array $documents, string $question, int $maxTokens = 2000): array
     {
@@ -45,15 +45,25 @@ class GroqClient
             throw new RuntimeException('Groq request failed: HTTP '.$response->status());
         }
         $choice = $response->json('choices.0');
-        $text = trim((string) ($choice['message']['content'] ?? ''));
+        $text = self::normalise((string) ($choice['message']['content'] ?? ''));
 
         return [
+            'text' => $text,
             'segments' => self::segments($text, count($documents)),
             'model' => (string) $response->json('model', $this->model()),
             'stop' => $choice['finish_reason'] ?? null,
             'input_tokens' => $response->json('usage.prompt_tokens'),
             'output_tokens' => $response->json('usage.completion_tokens'),
         ];
+    }
+
+    /** Some models use narrow or non-breaking spaces and non-breaking hyphens; plain characters read and wrap better. */
+    public static function normalise(string $text): string
+    {
+        $text = preg_replace('/[\x{00A0}\x{2007}\x{2009}\x{200A}\x{202F}]/u', ' ', $text) ?? $text;
+        $text = preg_replace('/[\x{2010}\x{2011}]/u', '-', $text) ?? $text;
+
+        return trim(preg_replace('/[ \t]{2,}/', ' ', $text) ?? $text);
     }
 
     /**

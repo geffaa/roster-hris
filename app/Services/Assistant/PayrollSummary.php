@@ -18,7 +18,7 @@ class PayrollSummary
     public function summarize(PayrollRun $run, User $user): array
     {
         $facts = $this->facts($run);
-        $result = ['points' => $this->plain($facts), 'mode' => 'rules', 'note' => __('Written from the run figures by rules; switch on AI answers for a written briefing.')];
+        $result = ['points' => $this->plain($facts), 'mode' => 'rules', 'note' => __('Written from the run figures by rules.')];
 
         if ($this->llm->enabled()) {
             try {
@@ -28,10 +28,10 @@ class PayrollSummary
                     'Brief me on this run.',
                     1200,
                 );
-                $text = trim(implode('', array_column($r['segments'], 'text')));
-                $points = array_values(array_filter(array_map(fn ($l) => trim(ltrim(trim($l), '-•* ')), explode("\n", $text))));
+                $text = $r['text'];
+                $points = self::points($text);
                 if ($points !== [] && $r['stop'] !== 'content_filter') {
-                    $result = ['points' => $points, 'mode' => 'ai', 'note' => null];
+                    $result = ['points' => $points, 'mode' => 'ai', 'note' => __('Written by AI from this run\'s figures. Check amounts against the table before approving.')];
                 }
             } catch (Throwable $e) {
                 Log::warning('Payroll summary fell back to rules', ['error' => $e->getMessage()]);
@@ -41,6 +41,20 @@ class PayrollSummary
         AssistantMessage::create(['company_id' => $run->company_id, 'user_id' => $user->id, 'kind' => 'payroll_summary', 'question' => $run->reference, 'answer' => $result, 'mode' => $result['mode']]);
 
         return $result;
+    }
+
+    /**
+     * Bullets, whether the model put them on separate lines or ran them together as "… . - Next point".
+     *
+     * @return list<string>
+     */
+    public static function points(string $text): array
+    {
+        $text = trim(preg_replace('/\s*\[\d{1,2}\]/', '', $text) ?? $text);
+        // Lines when the model used them; otherwise split only where a new bullet starts after a full stop.
+        $parts = str_contains($text, "\n") ? preg_split('/\n+/', $text) : preg_split('/(?<=[.!?])\s+[-•*]\s+/u', $text);
+
+        return array_values(array_filter(array_map(fn ($l) => trim(ltrim(trim($l), '-•* ')), $parts ?: [])));
     }
 
     /** @return array{text: string, changes: array<int, array<string, mixed>>, flags: array<int, string>, totals: array<string, mixed>, previous: ?PayrollRun, joiners: array<int, mixed>, leavers: array<int, mixed>} */

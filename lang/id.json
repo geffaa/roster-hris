@@ -65,5 +65,7 @@
     "I couldn't find this in the company's HR policies, so I won't guess. Ask HR directly, or rephrase with the policy topic (leave, attendance, overtime, payroll).": "Saya tidak menemukan ini di kebijakan HR perusahaan, jadi saya tidak akan menebak. Tanyakan langsung ke HR, atau ulangi dengan topik kebijakan (cuti, absensi, lembur, gaji).",
     "The AI assistant is unavailable right now, so these are the closest matching passages.": "Asisten AI sedang tidak tersedia, jadi ini potongan kebijakan yang paling cocok.",
     "AI answers are not switched on for this demo, so these are the closest matching passages.": "Jawaban AI tidak dinyalakan di demo ini, jadi ini potongan kebijakan yang paling cocok.",
-    "Reimbursement · Client meals": "Penggantian · Makan klien"
+    "Reimbursement · Client meals": "Penggantian · Makan klien",
+    "Written by AI from this run's figures. Check amounts against the table before approving.": "Ditulis AI dari angka run ini. Cocokkan jumlahnya dengan tabel sebelum menyetujui.",
+    "Written from the run figures by rules.": "Ditulis dari angka run dengan aturan tetap."
 }

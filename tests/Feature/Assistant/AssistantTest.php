@@ -88,7 +88,7 @@ it('sends the model only policy passages and the asker\'s own data, and keeps th
         {
             $this->documents = $documents;
 
-            return ['segments' => [['text' => 'You have 12 days left.', 'cites' => [0]], ['text' => ' Leave is approved by your manager.', 'cites' => [1]]], 'model' => 'openai/gpt-oss-120b', 'stop' => 'end_turn', 'input_tokens' => 900, 'output_tokens' => 40];
+            return ['text' => 'You have 12 days left [1]. Leave is approved by your manager [2].', 'segments' => [['text' => 'You have 12 days left.', 'cites' => [0]], ['text' => ' Leave is approved by your manager.', 'cites' => [1]]], 'model' => 'openai/gpt-oss-120b', 'stop' => 'end_turn', 'input_tokens' => 900, 'output_tokens' => 40];
         }
     };
     app()->instance(GroqClient::class, $fake);
