@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import Avatar from '@/components/roster/Avatar.vue';
-import { compactMoney, formatDate, formatDateTime, monthLabel, plainMoney } from '@/composables/useRoster';
+import { compactMoney, formatDate, formatDateTime, monthLabel, plainMoney, xsrfToken } from '@/composables/useRoster';
 import RosterLayout from '@/layouts/RosterLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
-import { Calculator, CalendarCheck, Info, Check, ChevronRight, CircleAlert, Download, Landmark, Lock, RefreshCw, Search, Send, TriangleAlert } from 'lucide-vue-next';
+import { Calculator, CalendarCheck, Info, Sparkles, Check, ChevronRight, CircleAlert, Download, Landmark, Lock, RefreshCw, Search, Send, TriangleAlert } from 'lucide-vue-next';
 import { computed, onBeforeUnmount, ref, watch } from 'vue';
 
 interface Line {
@@ -171,6 +171,18 @@ const approveHint = computed(() => {
     if (openReviews.value) return `Review ${openReviews.value} flagged ${openReviews.value === 1 ? 'person' : 'people'} first.`;
     return '';
 });
+// Briefing: a short read of what changed and what to check, from the run figures.
+const briefing = ref<{ points: string[]; mode: string; note: string | null } | null>(null);
+const briefingBusy = ref(false);
+async function brief() {
+    briefingBusy.value = true;
+    try {
+        const res = await fetch(route('payroll.briefing', { run: props.run.id }), { method: 'POST', headers: { Accept: 'application/json', 'X-XSRF-TOKEN': xsrfToken() }, credentials: 'same-origin' });
+        if (res.ok) briefing.value = await res.json();
+    } finally {
+        briefingBusy.value = false;
+    }
+}
 const netDelta = computed(() => (props.previous && props.run.totals ? pct(Number(props.run.totals.net), Number(props.previous.totals.net)) : null));
 </script>
 
@@ -243,6 +255,16 @@ const netDelta = computed(() => (props.previous && props.run.totals ? pct(Number
                     <div><span>Employee {{ contribName }}</span><b>{{ compactMoney(run.totals.employee_contributions, currency) }}</b><small>{{ money(run.totals.employee_contributions) }}</small></div>
                     <div><span>Employer {{ contribName }}</span><b>{{ compactMoney(run.totals.employer_contributions, currency) }}</b><small>{{ money(run.totals.employer_contributions) }}</small></div>
                     <div class="net"><span>Net pay</span><b>{{ compactMoney(run.totals.net, currency) }}</b><small v-if="netDelta !== null">{{ signed(netDelta) }} vs {{ previous!.month }}</small><small v-else>{{ money(run.totals.net) }}</small></div>
+                </section>
+
+                <section class="card brief">
+                    <div class="brief-h">
+                        <span class="nr-ic"><Sparkles class="icon" /></span>
+                        <div><b>Briefing before you approve</b><small>What changed against last month and who needs a check, written from this run's figures.</small></div>
+                        <button v-if="!briefing" type="button" class="btn sm" :disabled="briefingBusy" @click="brief">{{ briefingBusy ? 'Reading the run…' : 'Write briefing' }}</button>
+                    </div>
+                    <ul v-if="briefing" class="brief-list"><li v-for="(p, i) in briefing.points" :key="i">{{ p }}</li></ul>
+                    <p v-if="briefing?.note" class="small muted brief-note">{{ briefing.note }}</p>
                 </section>
 
                 <div v-if="alerts.length" class="alerts">

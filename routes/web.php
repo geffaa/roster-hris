@@ -5,6 +5,7 @@ use App\Http\Controllers\CompanySwitchController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Insights\AuditLogController;
 use App\Http\Controllers\Insights\ReportController;
+use App\Http\Controllers\Me\AskController;
 use App\Http\Controllers\Me\MyAttendanceController;
 use App\Http\Controllers\Me\PayslipController;
 use App\Http\Controllers\Me\ProfileController;
@@ -21,6 +22,7 @@ use App\Http\Controllers\People\IdentifierRevealController;
 use App\Http\Controllers\People\OrgChartController;
 use App\Http\Controllers\PushSubscriptionController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\Settings\PolicyController;
 use App\Http\Controllers\Settings\TimeSettingsController;
 use App\Http\Controllers\Time\InboxController;
 use App\Http\Controllers\Time\LeaveCalendarController;
@@ -62,6 +64,8 @@ Route::middleware(['auth', 'company'])->group(function () {
             Route::post('profile/bank', [ProfileController::class, 'bank'])->middleware('throttle:5,1')->name('profile.bank');
             Route::delete('profile/bank/{change}', [ProfileController::class, 'cancelBank'])->name('profile.bank.cancel');
             Route::put('locale', [ProfileController::class, 'locale'])->name('locale');
+            Route::get('ask', [AskController::class, 'index'])->name('ask');
+            Route::post('ask', [AskController::class, 'store'])->middleware('throttle:20,1')->name('ask.store');
             Route::get('pay', [PayslipController::class, 'index'])->name('pay');
             Route::get('pay/{payslip}', [PayslipController::class, 'show'])->name('payslip');
             Route::get('pay/{payslip}/pdf', [PayslipController::class, 'pdf'])->middleware('throttle:30,1')->name('payslip.pdf');
@@ -89,6 +93,7 @@ Route::middleware(['auth', 'company'])->group(function () {
             Route::post('{run}/publish', 'publish')->name('publish');
             Route::get('{run}/bank.csv', 'bankFile')->middleware('throttle:10,1')->name('bank');
             Route::get('{run}/summary.csv', 'summary')->name('summary');
+            Route::post('{run}/briefing', 'briefing')->middleware('throttle:10,1')->name('briefing');
         });
         Route::prefix('rule-packs')->name('rule-packs.')->controller(RulePackController::class)->group(function () {
             Route::get('{version?}', 'show')->name('show');
@@ -100,6 +105,9 @@ Route::middleware(['auth', 'company'])->group(function () {
             Route::post('{version}/discard', 'discard')->name('discard');
         });
         Route::get('audit-log', AuditLogController::class)->name('audit-log');
+        Route::get('settings/policies', [PolicyController::class, 'index'])->name('settings.policies');
+        Route::post('settings/policies', [PolicyController::class, 'store'])->name('settings.policies.store');
+        Route::delete('settings/policies/{document}', [PolicyController::class, 'destroy'])->name('settings.policies.destroy');
         Route::prefix('settings/time')->name('settings.')->controller(TimeSettingsController::class)->group(function () {
             Route::get('/', 'index')->name('time');
             Route::post('patterns', 'savePattern')->name('patterns.store');

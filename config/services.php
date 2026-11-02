@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    // HR assistant. Without a key Roster answers in extractive mode (matching policy passages, no generated text).
+    'anthropic' => [
+        'key' => env('ANTHROPIC_API_KEY'),
+    ],
+
 ];

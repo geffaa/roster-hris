@@ -4,7 +4,7 @@ import { usePwa } from '@/composables/usePwa';
 import { useT } from '@/i18n';
 import EmployeeAppLayout from '@/layouts/EmployeeAppLayout.vue';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
-import { CalendarDays, Download, X, CircleAlert, CloudOff, LocateFixed, LogIn, LogOut, MapPin, MapPinOff, PartyPopper, Plane, Timer, Wrench } from 'lucide-vue-next';
+import { CalendarDays, MessageCircleQuestion, Download, X, CircleAlert, CloudOff, LocateFixed, LogIn, LogOut, MapPin, MapPinOff, PartyPopper, Plane, Timer, Wrench } from 'lucide-vue-next';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 
 const { canInstall, install, standalone, ios } = usePwa();
@@ -199,6 +199,7 @@ const dayState = (d: Day) => {
             <Link :href="route('me.time-off')"><span class="qi"><Plane class="icon" /></span>{{ t('today.requestLeave') }}<small v-if="annual?.available != null">{{ t('common.daysLeft', { n: annual.available }) }}</small></Link>
             <Link :href="route('me.attendance')"><span class="qi"><Wrench class="icon" /></span>{{ t('today.fixDay') }}</Link>
             <Link :href="route('me.attendance')"><span class="qi"><Timer class="icon" /></span>{{ t('today.overtime') }}</Link>
+            <Link :href="route('me.ask')"><span class="qi"><MessageCircleQuestion class="icon" /></span>{{ t('today.askHr') }}</Link>
         </div>
 
         <section class="wk" aria-labelledby="wk">

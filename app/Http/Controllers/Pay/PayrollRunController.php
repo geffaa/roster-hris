@@ -8,10 +8,12 @@ use App\Jobs\CalculatePayrollRun;
 use App\Models\PayrollItem;
 use App\Models\PayrollRun;
 use App\Models\User;
+use App\Services\Assistant\PayrollSummary;
 use App\Services\Payroll\PayrollRuns;
 use App\Support\Csv;
 use App\Support\CurrentCompany;
 use Carbon\CarbonImmutable;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -171,6 +173,14 @@ class PayrollRunController extends Controller
         });
 
         return Csv::download(Str::slug($this->company->get()->name)."-{$run->reference}-summary.csv", $header, $rows);
+    }
+
+    public function briefing(Request $request, PayrollRun $run, PayrollSummary $summary): JsonResponse
+    {
+        $this->allow($request, Permission::PayrollView);
+        abort_unless($run->totals !== null, 422, 'Calculate the run first.');
+
+        return response()->json($summary->summarize($run, $request->user()));
     }
 
     private function allow(Request $request, Permission $permission): void
