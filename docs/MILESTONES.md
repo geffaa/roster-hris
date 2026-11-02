@@ -47,16 +47,22 @@ Estimasi total: MVP inti (M1–M3) ±3 minggu paruh waktu; M1–M4 ±4 minggu; M
   - **Perlu verifikasi:** batas Rp12 juta BPJS Kesehatan 2026 (sumber berita saja), dan tarif JKK sesuai kelas risiko perusahaan.
 
 ## M4 — Self-service PWA, laporan, polesan (±3–4 hari)
-- [ ] Dasbor karyawan & manager (S02, S11), notifikasi email + dalam aplikasi
-- [ ] PWA: manifest, service worker (`vite-plugin-pwa`), ikon, install ke layar utama; tanpa clock-in offline
-- [ ] Web push untuk persetujuan & slip terbit (uji Android; iOS setelah install)
-- [ ] Persetujuan perubahan rekening bank
-- [ ] Laporan (S14): rekap payroll, daftar iuran, absensi, saldo cuti, ekspor XLSX
-- [ ] Halaman audit log (S13 bagian audit) dengan filter
-- [ ] Lokalisasi ID/EN untuk UI dan slip
-- [ ] README, diagram rule pack, tangkapan layar, video 2 menit
+- [x] Dasbor karyawan & manager (S02, S11), notifikasi email + dalam aplikasi
+- [x] PWA: manifest, service worker (`vite-plugin-pwa`), ikon, install ke layar utama; tanpa clock-in offline
+- [x] Web push untuk persetujuan & slip terbit (uji Android; iOS setelah install)
+- [x] Persetujuan perubahan rekening bank
+- [x] Laporan (S14): rekap payroll, daftar iuran, absensi, saldo cuti, ekspor XLSX
+- [x] Halaman audit log (S13 bagian audit) dengan filter
+- [x] Lokalisasi ID/EN untuk UI dan slip
+- [x] README, diagram rule pack, tangkapan layar, video 2 menit
 - **Fitur:** F6, F7 (+ penyempurnaan F1)
 - **Verifikasi:** total laporan = total slip (otomatis); Playwright alur karyawan & run payroll; semua peran dijelajahi; kontras AA.
+- **Status 2026-11-02:** M4 selesai, kecuali video 2 menit yang dipindah ke M5 supaya merekam versi final. 154 tes Pest dan 3 tes E2E Playwright lulus; Larastan bersih; diuji di browser (1440 & 390 px).
+  - **Ditambah di luar daftar:** palet pencarian ⌘K, pengaturan pola kerja dan jenis cuti untuk HR, status "shift later", dan data demo yang mengikuti tanggal hari ini (bulan berjalan menunggu review, bulan sebelumnya terkunci).
+  - **Penyimpangan dari TECH-SPEC:**
+    - Service worker ditulis manual di `public/sw.js`, bukan memakai `vite-plugin-pwa`, karena lebih sederhana untuk aplikasi Laravel dan aturan "tanpa aksi offline" jadi eksplisit.
+    - Lokalisasi mencakup aplikasi karyawan, pesan server, email, dan slip. Ruang kerja admin tetap berbahasa Inggris.
+  - **Belum diuji:** web push di perangkat fisik Android/iOS. Alur langganan dan pengiriman sudah dites di level server.
 
 ## M5 — Asisten AI HR (opsional, ±3–4 hari)
 - [ ] Unggah dokumen kebijakan, potong teks + embedding (pgvector)

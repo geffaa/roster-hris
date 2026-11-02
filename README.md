@@ -1,6 +1,31 @@
 # Roster — multi-country HRIS
 
-Laravel 12 · PostgreSQL · Inertia + Vue 3 · Pest. Product, design and plan: [BREAKDOWN.md](BREAKDOWN.md), [docs/](docs/), [DESIGN.md](DESIGN.md).
+People records, attendance with geofenced clock-in, leave with approvals, and a rule-pack payroll engine (Indonesia + a generic progressive pack), with an installable phone app for employees in English and Bahasa Indonesia.
+
+Laravel 12 · PostgreSQL · Inertia + Vue 3 (TypeScript) · Pest · Playwright. Product, design and plan: [BREAKDOWN.md](BREAKDOWN.md), [docs/](docs/), [DESIGN.md](DESIGN.md).
+
+| | |
+|---|---|
+| ![Home](docs/screenshots/home.png) | ![Payroll run review](docs/screenshots/payroll-run.png) |
+| ![Rule pack editor](docs/screenshots/rule-pack.png) | ![Contribution report](docs/screenshots/reports.png) |
+
+<p><img src="docs/screenshots/phone-today.png" width="260" alt="Clock-in on a phone"> <img src="docs/screenshots/phone-pay.png" width="260" alt="Payslips on a phone"></p>
+
+## How payroll stays correct
+
+```mermaid
+flowchart LR
+    subgraph Pack["Rule pack (dated versions)"]
+        V1["ID-2026.1<br/>from 1 Jan"] --> V2["ID-2026.2<br/>from 1 Mar<br/>JP cap 11,086,300"]
+        V2 -.draft.-> V3["ID-2027.1<br/>needs a second approver"]
+    end
+    Inputs["Salary history · allowances<br/>unpaid leave · approved overtime<br/>year-to-date from locked runs"] --> Calc
+    V2 -- "version in force at period end" --> Calc["PayrollCalculator<br/>(pure, integer money)"]
+    Calc --> Items["Payroll items<br/>(breakdown copied)"]
+    Items --> Review["Review: changes > 20% need a tick<br/>negative net blocks"] --> A1["Approval 1"] --> A2["Approval 2<br/>(different person)"] --> Lock["Lock"] --> Slips["Payslips · PDF<br/>bank file · reports"]
+```
+
+Locked items keep their own copy of every number and the version code, so later salary or rate changes never alter a paid month. Corrections go into the next run.
 
 ## Milestone 1 (built)
 - **Multi-company isolation**: every company-owned model uses `BelongsToCompany` (global scope + auto-fill). The active company is resolved per request by `SetCurrentCompany` after verifying membership. Records of another company resolve to **404**.
@@ -57,6 +82,23 @@ Laravel 12 · PostgreSQL · Inertia + Vue 3 · Pest. Product, design and plan: [
 - **Outputs:** payslips in the employee app plus a PDF. A bank transfer CSV for locked runs only, with the export written to the audit log. A summary CSV with every contribution.
 - **Sources:** each number in `database/data/rule-packs/*.php` carries its source and check date. The BPJS Kesehatan cap for 2026 is marked "verify".
 
+## Milestone 4 (built): self-service, notifications, reports, polish
+- **Home** per role: payroll status, requests with one-click approve, today's attendance ("shift later" before a shift starts), contracts ending, upcoming holidays, leave and rule pack changes, headcount. Managers see their team only.
+- **Notifications**: in-app bell, email, and web push (VAPID) for approvals, decisions and published payslips. Notifications for steps someone else already decided are marked read automatically.
+- **Employee app**:
+  - Installable (manifest, icons, hand-written service worker).
+  - The offline page appears without a connection; clock-ins are never stored on the phone.
+  - Profile with phone, language and push settings.
+  - Bank account changes go to the HR queue and apply only after approval.
+- **Languages**: the employee app, server messages, emails and payslip PDFs follow each person's language (English / Bahasa Indonesia). The admin workspace stays in English.
+- **Reports**:
+  - Attendance and leave balances.
+  - Payroll by department and contributions per programme, read from locked runs so totals equal the payslips (tested).
+  - CSV or Excel export, protected against formula injection.
+- **Audit log** for auditors and super admins: filter by date, person, area and event; encrypted values show only that they changed.
+- **Time settings** for HR: work patterns (overnight shifts, working days, grace, default) and leave types (allowance, accrual, eligibility, per-event, half days, HR second approval).
+- **Search**: Cmd/Ctrl+K finds people within the viewer's scope, and pages.
+
 ## Run locally
 ```bash
 composer install && npm install
@@ -65,11 +107,12 @@ cp .env.example .env && php artisan key:generate
 php artisan migrate --seed
 npm run build && php artisan serve
 ```
-Demo logins (password `password`): `hr@roster.test` and `payroll@roster.test` (both approve payroll; asks for 2FA setup), `manager@roster.test`, `employee@roster.test`, `auditor@roster.test`, `payroll@roster.test`, `super@roster.test` (two companies), `uk.hr@roster.test`.
+Demo logins (password `password`): `hr@roster.test` and `payroll@roster.test` (both approve payroll; scan the 2FA QR code with any authenticator app on first sign-in), `manager@roster.test`, `employee@roster.test`, `auditor@roster.test`, `payroll@roster.test`, `super@roster.test` (two companies), `uk.hr@roster.test`.
 
 ## Checks
 ```bash
-./vendor/bin/pest          # feature tests on PostgreSQL (roster_test)
+./vendor/bin/pest          # unit + feature tests on PostgreSQL (roster_test)
+npm run e2e                # Playwright on its own database (roster_e2e) and port 8030
 ./vendor/bin/phpstan analyse
 ./vendor/bin/pint --test
 npx vue-tsc --noEmit
