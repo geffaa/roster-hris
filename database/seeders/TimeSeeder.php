@@ -17,6 +17,7 @@ use App\Services\Time\OvertimeService;
 use App\Services\Time\WorkCalendar;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Collection;
 
 /**
  * Synthetic time data for M2. Holiday dates are illustrative: Indonesian dates must be checked against
@@ -138,6 +139,41 @@ class TimeSeeder extends Seeder
                     'status' => $forgot ? 'incomplete' : ($lateMin > 0 ? 'late' : 'ok'), 'late_min' => $lateMin,
                 ]);
             }
+        }
+
+        $this->today($company, $calendar, $today, $people);
+    }
+
+    /**
+     * Today so far, by the real clock: most people are in, a couple are late, a few have not clocked in.
+     * Nobody has clocked out before their shift ends.
+     *
+     * @param  Collection<int, Employee>  $people
+     */
+    private function today(Company $company, WorkCalendar $calendar, CarbonImmutable $today, $people): void
+    {
+        $now = CarbonImmutable::now($company->timezone);
+        foreach ($people as $i => $e) {
+            $pattern = $calendar->patternFor($e);
+            if ($pattern->crosses_midnight || $calendar->workingDates($e, $today, $today, $pattern) === []) {
+                continue;
+            }
+            $start = $today->setTimeFromTimeString($pattern->start_time);
+            $end = $today->setTimeFromTimeString($pattern->end_time);
+            if ($now->lessThan($start->subMinutes(20)) || $i % 11 === 3) {
+                continue; // not in yet
+            }
+            $late = $i % 9 === 4;
+            $in = $late ? $start->addMinutes($pattern->grace_min + 6 + $i % 20) : $start->subMinutes(5 + $i % 18);
+            if ($in->greaterThan($now)) {
+                continue;
+            }
+            $out = $now->greaterThan($end->addMinutes(40)) ? $end->addMinutes(3 + $i % 35) : null;
+            AttendanceRecord::create([
+                'company_id' => $company->id, 'employee_id' => $e->id, 'work_date' => $today->toDateString(),
+                'clock_in_at' => $in->utc(), 'clock_out_at' => $out?->utc(), 'location_id' => $e->location_id, 'remote' => $e->location_id === null,
+                'in_distance_m' => 6 + $i % 70, 'status' => $late ? 'late' : 'ok', 'late_min' => $late ? (int) $start->addMinutes($pattern->grace_min)->diffInMinutes($in) : 0,
+            ]);
         }
     }
 

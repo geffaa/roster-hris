@@ -51,16 +51,16 @@ class ActivitySeeder extends Seeder
         $change = BankAccountChange::create(['company_id' => $nk->id, 'employee_id' => $dimas->id, 'bank_name' => 'BCA', 'account_number' => '8730 1122 4409', 'holder_name' => 'Dimas Arya']);
         app(ApprovalService::class)->submit('bank_change', $change, $dimas, hrOnly: true);
 
-        // Payroll officer: reviewed the flagged bonus and gave the first approval for October.
+        // Payroll officer: reviewed the flagged bonus and gave the first approval for the month in progress.
         Auth::setUser($payroll);
         $runs = app(PayrollRuns::class);
-        $october = PayrollRun::where('reference', 'RUN-2026-10')->firstOrFail();
-        foreach ($october->items()->get() as $item) {
+        $open = PayrollRun::where('status', 'calculated')->orderByDesc('period_start')->firstOrFail();
+        foreach ($open->items()->get() as $item) {
             if ($item->needsReview()) {
                 $runs->review($item, $payroll);
             }
         }
-        $runs->approve($october->refresh(), $payroll);
+        $runs->approve($open->refresh(), $payroll);
 
         Auth::forgetUser();
         app(CurrentCompany::class)->forget();

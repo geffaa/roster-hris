@@ -7,7 +7,7 @@ import { Head, Link, router } from '@inertiajs/vue3';
 import { CalendarDays, ChevronLeft, ChevronRight, House, PartyPopper } from 'lucide-vue-next';
 import { computed, ref, watch } from 'vue';
 
-type State = 'present' | 'late' | 'incomplete' | 'corrected' | 'leave' | 'holiday' | 'off' | 'absent' | 'not_in';
+type State = 'present' | 'late' | 'incomplete' | 'corrected' | 'leave' | 'holiday' | 'off' | 'absent' | 'not_in' | 'later';
 interface Row {
     id: number;
     name: string;
@@ -42,8 +42,9 @@ const meta: Record<State, { label: string; cls: string }> = {
     off: { label: 'Day off', cls: '' },
     absent: { label: 'No record', cls: 'danger' },
     not_in: { label: 'Not in yet', cls: '' },
+    later: { label: 'Shift later', cls: '' },
 };
-const chips: State[] = ['present', 'late', 'incomplete', 'leave', 'absent', 'not_in'];
+const chips: State[] = ['present', 'late', 'incomplete', 'leave', 'absent', 'not_in', 'later'];
 const filter = ref<State | null>(null);
 const shown = computed(() => (filter.value ? props.rows.filter((r) => r.state === filter.value) : props.rows));
 </script>

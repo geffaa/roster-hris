@@ -97,7 +97,7 @@ class InboxController extends Controller
     }
 
     /** @return array<string, mixed> */
-    private function present(ApprovalStep $step, string $tz): array
+    public function present(ApprovalStep $step, string $tz): array
     {
         $request = $step->request;
         $subject = $request->subject;

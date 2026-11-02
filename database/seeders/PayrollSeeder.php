@@ -23,12 +23,16 @@ use Illuminate\Support\Facades\Auth;
 
 /**
  * Rule packs (Indonesia ID-2026.1 and ID-2026.2, a pending ID-2027.1; Generic), salary components, bank details,
- * and payroll history: January–September locked and published, October calculated and waiting for two approvals.
+ * and payroll history: every month of this year before the current one locked and published; the current month calculated and waiting for review.
  */
 class PayrollSeeder extends Seeder
 {
+    /** The month in progress: earlier months are locked and paid, this one waits for review. */
+    private CarbonImmutable $open;
+
     public function run(): void
     {
+        $this->open = CarbonImmutable::now('Asia/Jakarta')->startOfMonth();
         $super = User::where('email', 'super@roster.test')->firstOrFail();
         $hr = User::where('email', 'hr@roster.test')->firstOrFail();
         $payroll = User::where('email', 'payroll@roster.test')->firstOrFail();
@@ -43,8 +47,8 @@ class PayrollSeeder extends Seeder
         $this->indonesiaPay($nk);
         $this->genericPay($nw);
 
-        $this->history($nk, 10, $payroll, $hr, thrMonth: 3);
-        $this->history($nw, 10, $ukHr, $super);
+        $this->history($nk, $this->open->month, $payroll, $hr, thrMonth: 3);
+        $this->history($nw, $this->open->month, $ukHr, $super);
 
         // People have read their older payslip emails; only the latest month is new.
         foreach (User::all() as $u) {
@@ -86,8 +90,8 @@ class PayrollSeeder extends Seeder
         RulePackVersion::create([
             'rule_pack_id' => $id->id, 'version' => 'ID-2027.1', 'effective_from' => '2027-01-01', 'status' => 'pending',
             'config' => $next, 'sources' => $nextSources, 'change_note' => 'JKK risk class moves from very low to low.', 'based_on_id' => $v2->id,
-            'created_by' => $super->id, 'submitted_at' => '2026-10-31 16:20',
-        ])->forceFill(['created_at' => '2026-10-30 09:00'])->save();
+            'created_by' => $super->id, 'submitted_at' => now()->subDay()->setTime(16, 20),
+        ])->forceFill(['created_at' => now()->subDays(2)->setTime(9, 0)])->save();
 
         $gen = RulePack::create(['country_code' => null, 'code' => 'GEN', 'name' => 'Generic (illustrative)', 'method' => $genData['config']['method']]);
         RulePackVersion::create([
@@ -123,22 +127,25 @@ class PayrollSeeder extends Seeder
         }
 
         $one = fn (string $no, SalaryComponent $sc, int $amount, string $date, string $note) => EmployeeComponent::create(['company_id' => $c->id, 'employee_id' => $people[$no]->id, 'salary_component_id' => $sc->id, 'amount' => $amount, 'effective_from' => $date, 'note' => $note]);
-        $one('NK-0011', $bonus, 8_000_000, '2026-10-20', 'Q3 bonus');
-        $one('NK-0001', $bonus, 15_000_000, '2026-10-20', 'Q3 bonus');
-        $one('NK-0024', $bonus, 4_500_000, '2026-07-20', 'Q2 sales target');
-        $one('NK-0018', $advance, 1_500_000, '2026-10-25', 'Advance from 2 Oct');
+        $one('NK-0011', $bonus, 8_000_000, $this->day(20), 'Quarterly bonus');
+        $one('NK-0001', $bonus, 15_000_000, $this->day(20), 'Quarterly bonus');
+        $one('NK-0024', $bonus, 4_500_000, $this->open->subMonthsNoOverflow(4)->setDay(20)->toDateString(), 'Sales target');
+        $one('NK-0018', $advance, 1_500_000, $this->day(25), 'Advance from '.CarbonImmutable::parse($this->day(2))->format('j M'));
 
         // October inputs from Time: approved overtime for Andi, two approved unpaid days for Yusuf.
-        foreach ([['2026-10-14', '17:30', '20:30', 180], ['2026-10-24', '09:00', '15:00', 360]] as [$date, $from, $to, $min]) {
+        $saturday = $this->open->setDay(21)->isSaturday() ? $this->open->setDay(21) : $this->open->setDay(21)->next(CarbonImmutable::SATURDAY);
+        foreach ([[$this->day(12), '17:30', '20:30', 180], [$saturday->toDateString(), '09:00', '15:00', 360]] as [$date, $from, $to, $min]) {
             OvertimeRequest::create(['company_id' => $c->id, 'employee_id' => $people['NK-0024']->id, 'work_date' => $date, 'start_time' => $from, 'end_time' => $to, 'minutes' => $min,
-                'reason' => $date === '2026-10-24' ? 'Saturday stand at the Jakarta Creative Expo' : 'Proposal deadline for Batik Keraton pitch', 'status' => 'approved']);
+                'reason' => $date === $saturday->toDateString() ? 'Saturday stand at the Jakarta Creative Expo' : 'Proposal deadline for Batik Keraton pitch', 'status' => 'approved']);
         }
         $unpaid = LeaveType::withoutGlobalScopes()->where('company_id', $c->id)->where('code', 'unpaid')->firstOrFail();
-        LeaveRequest::create(['company_id' => $c->id, 'employee_id' => $people['NK-0004']->id, 'leave_type_id' => $unpaid->id, 'start_date' => '2026-10-20', 'end_date' => '2026-10-21', 'days' => 2, 'reason' => 'Family matter in Makassar', 'status' => 'approved']);
-        AttendanceRecord::withoutGlobalScopes()->where('employee_id', $people['NK-0004']->id)->whereBetween('work_date', ['2026-10-20', '2026-10-21'])->delete();
+        $off = CarbonImmutable::parse($this->day(17));
+        $off = $off->isFriday() ? $off->addDays(3) : $off; // two weekdays in a row
+        LeaveRequest::create(['company_id' => $c->id, 'employee_id' => $people['NK-0004']->id, 'leave_type_id' => $unpaid->id, 'start_date' => $off->toDateString(), 'end_date' => $off->addDay()->toDateString(), 'days' => 2, 'reason' => 'Family matter in Makassar', 'status' => 'approved']);
+        AttendanceRecord::withoutGlobalScopes()->where('employee_id', $people['NK-0004']->id)->whereBetween('work_date', [$off->toDateString(), $off->addDay()->toDateString()])->delete();
 
         // Bayu resigned on 24 October: October is his final month, with the year-end tax recalculation.
-        $people['NK-0026']->update(['end_date' => '2026-10-24']);
+        $people['NK-0026']->update(['end_date' => $this->day(24)]);
     }
 
     private function genericPay(Company $c): void
@@ -148,7 +155,15 @@ class PayrollSeeder extends Seeder
         foreach ($people->values() as $i => $e) {
             $e->update(['bank_name' => ['Barclays', 'Monzo', 'HSBC UK', 'NatWest'][$i % 4], 'bank_account' => sprintf('20-%02d-%02d %08d', 10 + $i, 40 + $i, 31_926_000 + $i * 4_517)]);
         }
-        EmployeeComponent::create(['company_id' => $c->id, 'employee_id' => $people->firstWhere('employee_no', 'NW-003')->id, 'salary_component_id' => $bonus->id, 'amount' => 1500, 'effective_from' => '2026-10-15', 'note' => 'Launch bonus']);
+        EmployeeComponent::create(['company_id' => $c->id, 'employee_id' => $people->firstWhere('employee_no', 'NW-003')->id, 'salary_component_id' => $bonus->id, 'amount' => 1500, 'effective_from' => $this->day(15), 'note' => 'Launch bonus']);
+    }
+
+    /** A weekday in the open month on or after $day (YYYY-MM-DD). */
+    private function day(int $day): string
+    {
+        $d = $this->open->setDay(min($day, $this->open->daysInMonth));
+
+        return ($d->isWeekend() ? $d->nextWeekday() : $d)->toDateString();
     }
 
     /** Lock and publish every month before $openMonth; calculate $openMonth and leave it for review. */
@@ -158,9 +173,10 @@ class PayrollSeeder extends Seeder
         $current->set($company);
         $runs = app(PayrollRuns::class);
         config(['audit.console' => true]); // approvals and locks are part of the audit trail
+        $realNow = CarbonImmutable::now($company->timezone);
         for ($m = 1; $m <= $openMonth; $m++) {
-            $month = CarbonImmutable::create(2026, $m, 1);
-            $this->travel($month->endOfMonth()->setTime(9, 0));
+            $month = CarbonImmutable::create($this->open->year, $m, 1);
+            $this->travel($m === $openMonth ? $realNow->subHours(2) : $month->endOfMonth()->setTime(9, 0));
             $run = $runs->create($company, $month, $m === $thrMonth, $officer);
             $runs->calculate($run, $officer);
             if ($m === $openMonth) {
