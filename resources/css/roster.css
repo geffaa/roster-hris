@@ -808,3 +808,5 @@ textarea.input,table.rpt textarea.input{height:auto;padding:8px 12px;line-height
 .why{display:flex;gap:6px;align-items:flex-start}.why .icon{margin-top:3px;flex:none}
 .lines dd.wrap{white-space:normal;overflow-wrap:anywhere;text-align:right}
 .popwrap > .pop.bellpop{left:auto;right:0;min-width:0;z-index:50}
+.monthsel{width:220px}
+@media (max-width:640px){.monthsel{width:100%}}

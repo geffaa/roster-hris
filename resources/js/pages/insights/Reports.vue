@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import Avatar from '@/components/roster/Avatar.vue';
-import { humanMinutes } from '@/composables/useRoster';
+import RSelect from '@/components/roster/RSelect.vue';
+import { humanMinutes, monthLabel, plainMoney } from '@/composables/useRoster';
 import RosterLayout from '@/layouts/RosterLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
-import { ChevronLeft, ChevronRight, Download } from 'lucide-vue-next';
-import { computed } from 'vue';
+import { ChevronLeft, ChevronRight, Download, Sheet } from 'lucide-vue-next';
+import { computed, ref, watch } from 'vue';
 
 interface AttendanceRow {
     id: number;
@@ -33,14 +34,45 @@ interface LeaveData {
     types: { id: number; name: string; color: string; limited: boolean }[];
     rows: { id: number; employee_no: string; name: string; department: string | null; balances: Record<number, Balance> }[];
 }
+interface PayRow {
+    department: string;
+    headcount: number;
+    gross: number;
+    tax: number;
+    employee_contributions: number;
+    other_deductions: number;
+    net: number;
+    employer_contributions: number;
+    employer_cost: number;
+}
+interface ContribRow {
+    code: string;
+    name: string;
+    people: number;
+    employee: number;
+    employer: number;
+    total: number;
+}
 const props = defineProps<{
-    report: 'attendance' | 'leave';
+    report: 'attendance' | 'leave' | 'payroll' | 'contributions';
     period: string;
     today: string;
     scope: 'company' | 'team';
+    available: { time: boolean; pay: boolean };
+    months: string[];
+    currency: string;
     attendance: AttendanceRow[] | null;
     leave: LeaveData | null;
+    payroll: { rows: PayRow[]; total: PayRow; reference: string; status: string } | null;
+    contributions: { rows: ContribRow[]; reference: string } | null;
 }>();
+const isPay = computed(() => props.report === 'payroll' || props.report === 'contributions');
+const dec = computed(() => (props.currency === 'IDR' ? 0 : 2));
+const money = (v: number) => plainMoney(v, dec.value);
+const monthOptions = computed(() => props.months.map((m) => ({ value: m, label: monthLabel(`${m}-01`) })));
+const payMonth = ref<string | number | null>(props.period);
+watch(payMonth, (m) => m && m !== props.period && router.get(route('reports'), { report: props.report, period: m }, { preserveScroll: true }));
+const contribTotal = computed(() => (props.contributions?.rows ?? []).reduce((a, r) => ({ employee: a.employee + r.employee, employer: a.employer + r.employer, total: a.total + r.total }), { employee: 0, employer: 0, total: 0 }));
 
 const fmt = (n: number) => (Number.isInteger(n) ? String(n) : n.toFixed(1));
 
@@ -72,7 +104,7 @@ const totals = computed(() => {
         leave: rows.reduce((s, r) => s + r.leave, 0),
     };
 });
-const exportUrl = computed(() => route('reports.export', { report: props.report, period: props.period }));
+const exportUrl = (format: 'csv' | 'xlsx') => route('reports.export', { report: props.report, period: props.period, format });
 const monthInProgress = computed(() => props.report === 'attendance' && props.period === props.today.slice(0, 7));
 </script>
 
@@ -86,18 +118,26 @@ const monthInProgress = computed(() => props.report === 'attendance' && props.pe
                     <p>{{ scope === 'team' ? 'Your direct reports' : 'Everyone in the company' }}</p>
                 </div>
                 <div class="acts">
-                    <div class="datenav">
+                    <div v-if="isPay" class="fsel monthsel"><RSelect v-model="payMonth" :options="monthOptions" label="Payroll month" placeholder="No locked payroll yet" /></div>
+                    <div v-else class="datenav">
                         <button type="button" class="ibtn" :aria-label="report === 'attendance' ? 'Previous month' : 'Previous year'" @click="move(-1)"><ChevronLeft class="icon" /></button>
                         <span class="mlabel">{{ periodLabel }}</span>
                         <button type="button" class="ibtn" :aria-label="report === 'attendance' ? 'Next month' : 'Next year'" :disabled="period >= latest" @click="move(1)"><ChevronRight class="icon" /></button>
                     </div>
-                    <a class="btn" :href="exportUrl"><Download class="icon sm" />Download CSV</a>
+                    <a class="btn" :href="exportUrl('csv')"><Download class="icon sm" />CSV</a>
+                    <a class="btn" :href="exportUrl('xlsx')"><Sheet class="icon sm" />Excel</a>
                 </div>
             </div>
 
             <nav class="subtabs rtabs" aria-label="Report">
-                <Link :href="route('reports', { report: 'attendance' })" :aria-current="report === 'attendance' ? 'page' : undefined">Attendance summary</Link>
-                <Link :href="route('reports', { report: 'leave' })" :aria-current="report === 'leave' ? 'page' : undefined">Leave balances</Link>
+                <template v-if="available.time">
+                    <Link :href="route('reports', { report: 'attendance' })" :aria-current="report === 'attendance' ? 'page' : undefined">Attendance summary</Link>
+                    <Link :href="route('reports', { report: 'leave' })" :aria-current="report === 'leave' ? 'page' : undefined">Leave balances</Link>
+                </template>
+                <template v-if="available.pay">
+                    <Link :href="route('reports', { report: 'payroll' })" :aria-current="report === 'payroll' ? 'page' : undefined">Payroll summary</Link>
+                    <Link :href="route('reports', { report: 'contributions' })" :aria-current="report === 'contributions' ? 'page' : undefined">Contributions</Link>
+                </template>
             </nav>
 
             <section v-if="attendance" class="card">
@@ -171,6 +211,55 @@ const monthInProgress = computed(() => props.report === 'attendance' && props.pe
                         </tbody>
                     </table>
                 </div>
+            </section>
+
+            <section v-if="report === 'payroll'" class="card">
+                <div v-if="!payroll" class="empty"><p>No locked payroll yet. Reports read locked runs only, so they always match the payslips.</p></div>
+                <template v-else>
+                    <dl class="kstrip">
+                        <div><dt>Gross pay</dt><dd>{{ money(payroll.total.gross) }}</dd></div>
+                        <div><dt>Net pay</dt><dd>{{ money(payroll.total.net) }}<small>{{ payroll.total.headcount }} people · {{ payroll.reference }}</small></dd></div>
+                        <div><dt>Tax withheld</dt><dd>{{ money(payroll.total.tax) }}</dd></div>
+                        <div><dt>Employer cost</dt><dd>{{ money(payroll.total.employer_cost) }}<small>gross + employer contributions</small></dd></div>
+                    </dl>
+                    <div class="tablewrap">
+                        <table class="t rep-t">
+                            <thead><tr><th>Department</th><th class="n">People</th><th class="n">Gross</th><th class="n">Tax</th><th class="n">Employee contrib.</th><th class="n">Other deductions</th><th class="n">Net</th><th class="n">Employer contrib.</th></tr></thead>
+                            <tbody>
+                                <tr v-for="r in payroll.rows" :key="r.department">
+                                    <td><b>{{ r.department }}</b></td><td class="n num">{{ r.headcount }}</td><td class="n num">{{ money(r.gross) }}</td><td class="n num">{{ money(r.tax) }}</td>
+                                    <td class="n num">{{ money(r.employee_contributions) }}</td><td class="n num">{{ money(r.other_deductions) }}</td><td class="n num"><b>{{ money(r.net) }}</b></td><td class="n num">{{ money(r.employer_contributions) }}</td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td>Total</td><td class="n num">{{ payroll.total.headcount }}</td><td class="n num">{{ money(payroll.total.gross) }}</td><td class="n num">{{ money(payroll.total.tax) }}</td>
+                                    <td class="n num">{{ money(payroll.total.employee_contributions) }}</td><td class="n num">{{ money(payroll.total.other_deductions) }}</td><td class="n num">{{ money(payroll.total.net) }}</td><td class="n num">{{ money(payroll.total.employer_contributions) }}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </template>
+            </section>
+
+            <section v-if="report === 'contributions'" class="card">
+                <div v-if="!contributions" class="empty"><p>No locked payroll yet.</p></div>
+                <template v-else>
+                    <div class="legend2"><span>What to pay each programme for {{ monthLabel(`${period}-01`) }} ({{ contributions.reference }}). The Excel and CSV files list every person.</span></div>
+                    <div class="tablewrap">
+                        <table class="t rep-t">
+                            <thead><tr><th>Programme</th><th class="n">People</th><th class="n">Employee part</th><th class="n">Employer part</th><th class="n">To pay</th></tr></thead>
+                            <tbody>
+                                <tr v-for="r in contributions.rows" :key="r.code">
+                                    <td><b>{{ r.name }}</b></td><td class="n num">{{ r.people }}</td><td class="n num">{{ money(r.employee) }}</td><td class="n num">{{ money(r.employer) }}</td><td class="n num"><b>{{ money(r.total) }}</b></td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr><td>Total</td><td /><td class="n num">{{ money(contribTotal.employee) }}</td><td class="n num">{{ money(contribTotal.employer) }}</td><td class="n num">{{ money(contribTotal.total) }}</td></tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </template>
             </section>
 
             <p class="synthetic">

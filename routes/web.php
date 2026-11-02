@@ -3,7 +3,7 @@
 use App\Http\Controllers\Auth\TwoFactorController;
 use App\Http\Controllers\CompanySwitchController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Insights\TimeReportController;
+use App\Http\Controllers\Insights\ReportController;
 use App\Http\Controllers\Me\MyAttendanceController;
 use App\Http\Controllers\Me\PayslipController;
 use App\Http\Controllers\Me\ProfileController;
@@ -70,7 +70,7 @@ Route::middleware(['auth', 'company'])->group(function () {
         Route::post('approvals/{step}', [InboxController::class, 'decide'])->name('approvals.decide');
         Route::get('attendance', TeamAttendanceController::class)->name('attendance');
         Route::get('leave-calendar', LeaveCalendarController::class)->name('leave-calendar');
-        Route::get('reports', [TimeReportController::class, 'index'])->name('reports');
+        Route::get('reports', [ReportController::class, 'index'])->name('reports');
         Route::prefix('payroll')->name('payroll.')->controller(PayrollRunController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::post('/', 'store')->name('store');
@@ -92,7 +92,7 @@ Route::middleware(['auth', 'company'])->group(function () {
             Route::post('{version}/reject', 'reject')->name('reject');
             Route::post('{version}/discard', 'discard')->name('discard');
         });
-        Route::get('reports/export', [TimeReportController::class, 'export'])->middleware('throttle:20,1')->name('reports.export');
+        Route::get('reports/export', [ReportController::class, 'export'])->middleware('throttle:20,1')->name('reports.export');
 
         Route::prefix('employees/import')->name('employees.import.')->controller(EmployeeImportController::class)->group(function () {
             Route::get('/', 'create')->name('create');
