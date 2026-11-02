@@ -107,10 +107,10 @@ class LeaveService
     public function request(Employee $employee, LeaveType $type, CarbonImmutable $start, CarbonImmutable $end, string $halfDay, ?string $reason): LeaveRequest
     {
         if ($end->lessThan($start)) {
-            throw ValidationException::withMessages(['end_date' => 'The last day must be on or after the first day.']);
+            throw ValidationException::withMessages(['end_date' => __('The last day must be on or after the first day.')]);
         }
         if ($halfDay !== 'none' && (! $start->isSameDay($end) || ! $type->half_day_allowed)) {
-            throw ValidationException::withMessages(['half_day' => $type->half_day_allowed ? 'Half days are for single-day requests.' : "{$type->name} cannot be taken as half days."]);
+            throw ValidationException::withMessages(['half_day' => $type->half_day_allowed ? __('Half days are for single-day requests.') : __(':type cannot be taken as half days.', ['type' => $type->name])]);
         }
 
         $eligible = $this->eligibleFrom($employee, $type);
@@ -120,20 +120,20 @@ class LeaveService
 
         $count = $this->workingDays($employee, $start, $end, $halfDay);
         if ($count['days'] <= 0) {
-            throw ValidationException::withMessages(['start_date' => 'Those dates are weekends or public holidays, so no leave is needed.']);
+            throw ValidationException::withMessages(['start_date' => __('Those dates are weekends or public holidays, so no leave is needed.')]);
         }
 
         $overlap = LeaveRequest::withoutGlobalScopes()->where('employee_id', $employee->id)->whereIn('status', ['pending', 'approved'])
             ->whereDate('start_date', '<=', $end->toDateString())->whereDate('end_date', '>=', $start->toDateString())->exists();
         if ($overlap) {
-            throw ValidationException::withMessages(['start_date' => 'You already have leave booked or pending on some of these days.']);
+            throw ValidationException::withMessages(['start_date' => __('You already have leave booked or pending on some of these days.')]);
         }
 
         if ($type->isLimited() && ! $type->allow_negative) {
             foreach ($count['by_year'] as $year => $needed) {
                 $available = $this->balance($employee, $type, $year)['available'];
                 if ($needed > $available) {
-                    throw ValidationException::withMessages(['end_date' => sprintf('This needs %s %s from your %d balance, but only %s %s left.', $this->fmt($needed), $needed == 1 ? 'day' : 'days', $year, $this->fmt(max(0, $available)), $available == 1 ? 'is' : 'are')]);
+                    throw ValidationException::withMessages(['end_date' => __('This needs :needed :unit from your :year balance, but only :left :verb left.', ['needed' => $this->fmt($needed), 'unit' => __($needed == 1 ? 'day' : 'days'), 'year' => $year, 'left' => $this->fmt(max(0, $available)), 'verb' => __($available == 1 ? 'is' : 'are')])]);
                 }
             }
         }
@@ -177,7 +177,7 @@ class LeaveService
         }
 
         if ($leave->status !== 'approved' || $end->lessThanOrEqualTo($today)) {
-            throw ValidationException::withMessages(['leave' => 'This leave has already been taken and cannot be cancelled.']);
+            throw ValidationException::withMessages(['leave' => __('This leave has already been taken and cannot be cancelled.')]);
         }
 
         $employee = Employee::withoutGlobalScopes()->findOrFail($leave->employee_id);

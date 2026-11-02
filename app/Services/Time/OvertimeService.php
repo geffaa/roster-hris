@@ -22,10 +22,10 @@ class OvertimeService
         $minutes = (int) $from->diffInMinutes($to);
 
         if ($minutes < 30 || $minutes > 12 * 60) {
-            throw ValidationException::withMessages(['end_time' => 'Overtime must be between 30 minutes and 12 hours.']);
+            throw ValidationException::withMessages(['end_time' => __('Overtime must be between 30 minutes and 12 hours.')]);
         }
         if ($date->greaterThan(CarbonImmutable::today()->addDays(30))) {
-            throw ValidationException::withMessages(['work_date' => 'Overtime can be requested up to 30 days ahead.']);
+            throw ValidationException::withMessages(['work_date' => __('Overtime can be requested up to 30 days ahead.')]);
         }
 
         return DB::transaction(function () use ($employee, $date, $start, $end, $minutes, $reason) {

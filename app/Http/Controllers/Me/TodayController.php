@@ -120,8 +120,8 @@ class TodayController extends Controller
         $tz = Company::findOrFail($employee->company_id)->timezone;
         $time = CarbonImmutable::parse($data['action'] === 'in' ? $record->clock_in_at : $record->clock_out_at)->setTimezone($tz)->format('H:i');
         $message = $data['action'] === 'in'
-            ? ($record->late_min > 0 ? "Clocked in at {$time}, ".ClockService::humanMinutes($record->late_min).' after the grace period.' : "Clocked in at {$time}. Have a good day.")
-            : "Clocked out at {$time}.";
+            ? ($record->late_min > 0 ? __('Clocked in at :time, :late after the grace period.', ['time' => $time, 'late' => ClockService::humanMinutes($record->late_min)]) : __('Clocked in at :time. Have a good day.', ['time' => $time]))
+            : __('Clocked out at :time.', ['time' => $time]);
 
         return back()->with('success', $message);
     }

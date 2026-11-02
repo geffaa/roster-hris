@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { formatDate, humanMinutes } from '@/composables/useRoster';
+import { humanMinutes } from '@/composables/useRoster';
 import { usePwa } from '@/composables/usePwa';
 import { useT } from '@/i18n';
 import EmployeeAppLayout from '@/layouts/EmployeeAppLayout.vue';
@@ -8,7 +8,7 @@ import { CalendarDays, Download, X, CircleAlert, CloudOff, LocateFixed, LogIn, L
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 
 const { canInstall, install, standalone, ios } = usePwa();
-const { t } = useT();
+const { t, dateLocale, d: fd } = useT();
 const hideInstall = ref(typeof localStorage !== 'undefined' && (() => { try { return localStorage.getItem('roster.install.hide') === '1'; } catch { return false; } })());
 function dismissInstall() {
     hideInstall.value = true;
@@ -46,8 +46,8 @@ const page = usePage<{ errors: Record<string, string> }>();
 const offset = new Date(props.now).getTime() - Date.now();
 const tick = ref(Date.now() + offset);
 let timer: ReturnType<typeof setInterval> | undefined;
-const clock = computed(() => new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: props.timezone }).format(tick.value));
-const dateLabel = computed(() => new Intl.DateTimeFormat('en-GB', { weekday: 'long', day: 'numeric', month: 'long', timeZone: props.timezone }).format(tick.value));
+const clock = computed(() => new Intl.DateTimeFormat(dateLocale.value, { hour: '2-digit', minute: '2-digit', timeZone: props.timezone }).format(tick.value));
+const dateLabel = computed(() => new Intl.DateTimeFormat(dateLocale.value, { weekday: 'long', day: 'numeric', month: 'long', timeZone: props.timezone }).format(tick.value));
 
 /* Location: shown to the employee for guidance; the server makes the real decision. */
 type Geo = 'idle' | 'locating' | 'inside' | 'outside' | 'denied' | 'unavailable' | 'remote';
@@ -116,7 +116,7 @@ const failed = ref<string | null>(null);
 
 function submit() {
     if (!online.value) {
-        failed.value = 'You are offline. Nothing was saved; try again when you have signal.';
+        failed.value = t('today.offlineTap');
         return;
     }
     failed.value = null;
@@ -128,18 +128,18 @@ function submit() {
     );
 }
 
-const lateNote = computed(() => (props.record && props.record.late_min > 0 ? `${humanMinutes(props.record.late_min)} after the ${props.shift?.grace ?? 0}-minute grace period` : null));
+const lateNote = computed(() => (props.record && props.record.late_min > 0 ? t('today.lateNote', { late: humanMinutes(props.record.late_min), grace: props.shift?.grace ?? 0 }) : null));
 const dayState = (d: Day) => {
     if (d.holiday) return { text: d.holiday, cls: 'muted' };
-    if (!d.working) return { text: 'Day off', cls: 'muted' };
-    if (d.status === 'incomplete') return { text: `${d.in} – no clock-out`, cls: 'warn' };
-    if (d.in) return { text: `${d.in} – ${d.out ?? 'now'}`, cls: d.status === 'late' ? 'warn' : '' };
-    return { text: d.future ? '—' : 'No record', cls: d.future ? 'muted' : 'bad' };
+    if (!d.working) return { text: t('common.dayOff'), cls: 'muted' };
+    if (d.status === 'incomplete') return { text: t('today.noClockOut', { in: d.in ?? '' }), cls: 'warn' };
+    if (d.in) return { text: `${d.in} – ${d.out ?? t('common.now')}`, cls: d.status === 'late' ? 'warn' : '' };
+    return { text: d.future ? '—' : t('common.noRecord'), cls: d.future ? 'muted' : 'bad' };
 };
 </script>
 
 <template>
-    <Head title="Today" />
+    <Head :title="t('today.title')" />
     <EmployeeAppLayout current="today">
         <div v-if="!standalone && !hideInstall && (canInstall || ios)" class="installbar">
             <img src="/icons/icon-192.png" alt="" />
@@ -148,64 +148,64 @@ const dayState = (d: Day) => {
             <button type="button" class="ibtn" aria-label="Dismiss" @click="dismissInstall"><X class="icon sm" /></button>
         </div>
         <div class="hi">
-            <h1>Hi, {{ employee.first_name }}</h1>
+            <h1>{{ t('today.hi', { name: employee.first_name }) }}</h1>
             <p>{{ dateLabel }}</p>
         </div>
 
         <Link v-if="incomplete" class="note warning fixit" :href="route('me.attendance')">
-            <Wrench class="icon sm" /><span><b>You didn't clock out on {{ formatDate(incomplete.date) }}.</b> Tap to send a correction to your manager.</span>
+            <Wrench class="icon sm" /><span><b>{{ t('today.missedOut', { date: fd(incomplete.date) }) }}</b> {{ t('today.missedOutAction') }}</span>
         </Link>
 
         <section class="clock" aria-live="polite">
-            <div class="time num">{{ clock }}<small v-if="shift">Shift {{ shift.start }}–{{ shift.end }} · grace {{ shift.grace }} min</small><small v-else>No shift pattern assigned</small></div>
+            <div class="time num">{{ clock }}<small v-if="shift">{{ t('today.shift', { start: shift.start, end: shift.end, grace: shift.grace }) }}</small><small v-else>{{ t('today.noShift') }}</small></div>
 
             <template v-if="mode === 'holiday'">
-                <div class="where muted-state"><PartyPopper class="icon" />Public holiday: {{ holiday }}</div>
-                <p class="small muted">No clock-in needed. If you are working today, ask your manager to log overtime.</p>
+                <div class="where muted-state"><PartyPopper class="icon" />{{ t('today.holiday', { name: holiday ?? '' }) }}</div>
+                <p class="small muted">{{ t('today.holidayHint') }}</p>
             </template>
             <template v-else-if="mode === 'off'">
-                <div class="where muted-state"><CalendarDays class="icon" />No shift today</div>
-                <p class="small muted">Your pattern: {{ shift?.label }}.</p>
+                <div class="where muted-state"><CalendarDays class="icon" />{{ t('today.noShiftToday') }}</div>
+                <p class="small muted">{{ t('today.pattern', { name: shift?.label ?? '' }) }}</p>
             </template>
             <template v-else>
                 <div v-if="mode === 'in' || mode === 'out'" class="where" :class="geo">
-                    <template v-if="geo === 'remote'"><MapPin class="icon" />{{ location ? `${location.name} · remote allowed` : 'Remote · no fixed location' }}</template>
-                    <template v-else-if="geo === 'inside'"><MapPin class="icon" />At {{ location?.name }} · {{ human(distance ?? 0) }}</template>
-                    <template v-else-if="geo === 'outside'"><MapPinOff class="icon" />{{ human(distance ?? 0) }} from {{ location?.name }}</template>
-                    <template v-else-if="geo === 'denied'"><MapPinOff class="icon" />Location permission is off</template>
-                    <template v-else-if="geo === 'unavailable'"><MapPinOff class="icon" />Can't read your location</template>
-                    <template v-else><LocateFixed class="icon" />Finding your location…</template>
+                    <template v-if="geo === 'remote'"><MapPin class="icon" />{{ location ? t('today.remoteAt', { name: location.name }) : t('today.remote') }}</template>
+                    <template v-else-if="geo === 'inside'"><MapPin class="icon" />{{ t('today.at', { name: location?.name ?? '', distance: human(distance ?? 0) }) }}</template>
+                    <template v-else-if="geo === 'outside'"><MapPinOff class="icon" />{{ t('today.away', { name: location?.name ?? '', distance: human(distance ?? 0) }) }}</template>
+                    <template v-else-if="geo === 'denied'"><MapPinOff class="icon" />{{ t('today.locDenied') }}</template>
+                    <template v-else-if="geo === 'unavailable'"><MapPinOff class="icon" />{{ t('today.locUnavailable') }}</template>
+                    <template v-else><LocateFixed class="icon" />{{ t('today.locating') }}</template>
                 </div>
-                <p v-if="mode === 'in' && geo === 'outside'" class="small muted">Clock-in works within {{ location?.radius }} m of {{ location?.name }}.</p>
-                <p v-if="mode === 'in' && geo === 'denied'" class="small muted">Allow location for this site in your browser settings, then reload.</p>
+                <p v-if="mode === 'in' && geo === 'outside'" class="small muted">{{ t('today.radius', { radius: location?.radius ?? 0, name: location?.name ?? '' }) }}</p>
+                <p v-if="mode === 'in' && geo === 'denied'" class="small muted">{{ t('today.allowLoc') }}</p>
 
                 <button v-if="mode !== 'done'" type="button" class="go" :class="{ out: mode === 'out' }" :disabled="blocked || busy" @click="submit">
-                    <component :is="mode === 'out' ? LogOut : LogIn" class="icon" />{{ busy ? 'Saving…' : mode === 'out' ? 'Clock out' : 'Clock in' }}
+                    <component :is="mode === 'out' ? LogOut : LogIn" class="icon" />{{ busy ? t('today.saving') : mode === 'out' ? t('today.clockOut') : t('today.clockIn') }}
                 </button>
-                <div v-else class="where done"><Timer class="icon" />Done for today</div>
+                <div v-else class="where done"><Timer class="icon" />{{ t('today.done') }}</div>
             </template>
 
-            <p v-if="!online" class="err row"><CloudOff class="icon sm" />Offline. Clocking needs a connection; nothing is stored on the phone.</p>
+            <p v-if="!online" class="err row"><CloudOff class="icon sm" />{{ t('today.offline') }}</p>
             <p v-if="failed" class="err row" role="alert"><CircleAlert class="icon sm" />{{ failed }}</p>
             <p v-if="page.props.errors.clock" class="err row" role="alert"><CircleAlert class="icon sm" />{{ page.props.errors.clock }}</p>
 
             <div v-if="record" class="row2">
-                <span>In <b class="num">{{ record.in }}</b><template v-if="lateNote"><br /><span class="small warn">{{ lateNote }}</span></template></span>
-                <span>Out <b class="num">{{ record.out ?? '—' }}</b></span>
+                <span>{{ t('today.in') }} <b class="num">{{ record.in }}</b><template v-if="lateNote"><br /><span class="small warn">{{ lateNote }}</span></template></span>
+                <span>{{ t('today.out') }} <b class="num">{{ record.out ?? '—' }}</b></span>
             </div>
         </section>
 
         <div class="quick">
-            <Link :href="route('me.time-off')"><span class="qi"><Plane class="icon" /></span>Request leave<small v-if="annual?.available != null">{{ annual.available }} days left</small></Link>
-            <Link :href="route('me.attendance')"><span class="qi"><Wrench class="icon" /></span>Fix a day</Link>
-            <Link :href="route('me.attendance')"><span class="qi"><Timer class="icon" /></span>Overtime</Link>
+            <Link :href="route('me.time-off')"><span class="qi"><Plane class="icon" /></span>{{ t('today.requestLeave') }}<small v-if="annual?.available != null">{{ t('common.daysLeft', { n: annual.available }) }}</small></Link>
+            <Link :href="route('me.attendance')"><span class="qi"><Wrench class="icon" /></span>{{ t('today.fixDay') }}</Link>
+            <Link :href="route('me.attendance')"><span class="qi"><Timer class="icon" /></span>{{ t('today.overtime') }}</Link>
         </div>
 
         <section class="wk" aria-labelledby="wk">
-            <h2 id="wk">This week</h2>
+            <h2 id="wk">{{ t('today.week') }}</h2>
             <div v-for="d in week" :key="d.date" class="dy">
-                <span class="d">{{ d.label }}</span>
-                <span>{{ formatDate(d.date).replace(/ \d{4}$/, '') }}</span>
+                <span class="d">{{ fd(d.date, { weekday: 'short' }) }}</span>
+                <span>{{ fd(d.date, { day: 'numeric', month: 'short' }) }}</span>
                 <span class="num" :class="dayState(d).cls">{{ dayState(d).text }}</span>
             </div>
         </section>

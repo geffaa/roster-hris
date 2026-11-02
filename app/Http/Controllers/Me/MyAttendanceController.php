@@ -59,7 +59,7 @@ class MyAttendanceController extends Controller
             'reason' => ['required', 'string', 'max:500'],
         ]);
         if ($record->corrections()->where('status', 'pending')->exists()) {
-            throw ValidationException::withMessages(['reason' => 'A correction for this day is already waiting for approval.']);
+            throw ValidationException::withMessages(['reason' => __('A correction for this day is already waiting for approval.')]);
         }
 
         $tz = Company::findOrFail($employee->company_id)->timezone;
@@ -70,7 +70,7 @@ class MyAttendanceController extends Controller
             $out = $out->addDay(); // night shift ending after midnight
         }
         if ($in->diffInHours($out) > 16) {
-            throw ValidationException::withMessages(['out' => 'A shift cannot be longer than 16 hours.']);
+            throw ValidationException::withMessages(['out' => __('A shift cannot be longer than 16 hours.')]);
         }
 
         DB::transaction(function () use ($record, $employee, $in, $out, $data) {
@@ -85,7 +85,7 @@ class MyAttendanceController extends Controller
             $this->approvals->submit('attendance_correction', $correction, $employee);
         });
 
-        return back()->with('success', 'Correction sent to your manager.');
+        return back()->with('success', __('Correction sent to your manager.'));
     }
 
     public function overtime(Request $request): RedirectResponse
@@ -98,6 +98,6 @@ class MyAttendanceController extends Controller
         ]);
         $o = $this->overtime->request(TodayController::employeeOf($request), CarbonImmutable::parse($data['work_date']), $data['start_time'], $data['end_time'], $data['reason']);
 
-        return back()->with('success', sprintf('Overtime of %dh %02dm sent for approval.', intdiv($o->minutes, 60), $o->minutes % 60));
+        return back()->with('success', __('Overtime of :h h :m min sent for approval.', ['h' => intdiv($o->minutes, 60), 'm' => sprintf('%02d', $o->minutes % 60)]));
     }
 }

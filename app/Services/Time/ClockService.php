@@ -58,26 +58,26 @@ class ClockService
         $workDate = $this->workDate($pattern, $now);
 
         if ($holiday = $this->calendar->holidayOn($company, $workDate)) {
-            throw new ClockException("Today is a public holiday ({$holiday}). If you are working, ask your manager to log overtime.", 'holiday');
+            throw new ClockException(__('Today is a public holiday (:name). If you are working, ask your manager to log overtime.', ['name' => $holiday]), 'holiday');
         }
         if ($pattern && ! in_array($workDate->isoWeekday(), $pattern->working_days, true)) {
-            throw new ClockException('You have no shift today. If you are working, ask your manager to log overtime.', 'day_off');
+            throw new ClockException(__('You have no shift today. If you are working, ask your manager to log overtime.'), 'day_off');
         }
 
         $existing = AttendanceRecord::withoutGlobalScopes()->where('employee_id', $employee->id)->whereDate('work_date', $workDate)->first();
         if ($existing) {
             throw new ClockException($existing->clock_out_at
-                ? 'You already clocked out for today.'
-                : 'You clocked in at '.$existing->clock_in_at->setTimezone($company->timezone)->format('H:i').'.', 'duplicate');
+                ? __('You already clocked out for today.')
+                : __('You clocked in at :time.', ['time' => $existing->clock_in_at->setTimezone($company->timezone)->format('H:i')]), 'duplicate');
         }
 
         $start = $this->shiftStart($pattern, $workDate);
         $end = $this->shiftEnd($pattern, $workDate);
         if ($start && $now->lessThan($start->subHours(2))) {
-            throw new ClockException('Clock-in opens at '.$start->subHours(2)->format('H:i').', two hours before your shift.', 'too_early');
+            throw new ClockException(__('Clock-in opens at :time, two hours before your shift.', ['time' => $start->subHours(2)->format('H:i')]), 'too_early');
         }
         if ($end && $now->greaterThanOrEqualTo($end)) {
-            throw new ClockException('Your shift ended at '.$end->format('H:i').'. If you worked today, send a correction or request overtime.', 'too_late');
+            throw new ClockException(__('Your shift ended at :time. If you worked today, send a correction or request overtime.', ['time' => $end->format('H:i')]), 'too_late');
         }
 
         [$distance, $remote, $locationId] = $this->checkLocation($employee, $lat, $lng);
@@ -103,7 +103,7 @@ class ClockService
             ]);
         } catch (UniqueConstraintViolationException) {
             // Two taps within the same second: the first one won.
-            throw new ClockException('You are already clocked in.', 'duplicate');
+            throw new ClockException(__('You are already clocked in.'), 'duplicate');
         }
     }
 
@@ -120,7 +120,7 @@ class ClockService
             ->first();
 
         if (! $record) {
-            throw new ClockException('There is no open shift to clock out from.', 'not_clocked_in');
+            throw new ClockException(__('There is no open shift to clock out from.'), 'not_clocked_in');
         }
 
         $record->update(['clock_out_at' => $now->utc(), 'out_lat' => $lat, 'out_lng' => $lng]);
@@ -139,12 +139,12 @@ class ClockService
             return [null, true, $location?->id];
         }
         if ($lat === null || $lng === null) {
-            throw new ClockException("Turn on location so we can confirm you are at {$location->name}.", 'no_location');
+            throw new ClockException(__('Turn on location so we can confirm you are at :place.', ['place' => $location->name]), 'no_location');
         }
 
         $distance = Geo::distance($lat, $lng, (float) $location->lat, (float) $location->lng);
         if ($distance > $location->radius_m) {
-            throw new ClockException(sprintf('You are %s from %s. Clock-in works within %d m.', Geo::human($distance), $location->name, $location->radius_m), 'outside');
+            throw new ClockException(__('You are :distance from :place. Clock-in works within :radius m.', ['distance' => Geo::human($distance), 'place' => $location->name, 'radius' => $location->radius_m]), 'outside');
         }
 
         return [$distance, false, $location->id];
