@@ -11,7 +11,7 @@ use Illuminate\Support\Carbon;
 
 beforeEach(function () {
     $this->t = payrollSetup();
-    config(['services.anthropic.key' => null]);
+    config(['services.groq.key' => null]);
     $this->travelTo(Carbon::parse('2026-10-31 10:00', 'Asia/Jakarta'));
 });
 

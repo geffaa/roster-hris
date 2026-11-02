@@ -71,9 +71,9 @@ Estimasi total: MVP inti (M1–M3) ±3 minggu paruh waktu; M1–M4 ±4 minggu; M
 - [x] Ringkasan anomali payroll untuk Payroll Officer
 - **Verifikasi:** 20 pertanyaan uji berjawaban diketahui; tidak ada kebocoran antar-karyawan/antar-perusahaan.
 - **Status 2026-11-02:** M5 selesai.
-  - **Penyimpangan:** pencarian kebijakan memakai full-text search PostgreSQL (`simple`), bukan pgvector. Claude tidak menyediakan API embedding, dan dokumen kebijakan pendek; 20 dari 20 pertanyaan uji menemukan kebijakan yang benar di 3 hasil teratas.
+  - **Penyimpangan:** pencarian kebijakan memakai full-text search PostgreSQL (`simple`), bukan pgvector. dokumen kebijakan pendek dan terstruktur, jadi tidak perlu embedding; 20 dari 20 pertanyaan uji menemukan kebijakan yang benar di 3 hasil teratas.
   - **Data pribadi:** disusun server khusus untuk akun yang login, bukan lewat tool yang bisa dipanggil model, jadi kebocoran antar-karyawan tidak mungkin terjadi secara struktur (ada tes).
-  - **Model:** `claude-opus-5-5` dengan `fallbacks: "default"`. Tanpa API key, asisten tampil dalam mode ekstraktif berlabel.
+  - **Model:** Groq lewat API yang kompatibel OpenAI (`openai/gpt-oss-120b`, bisa diganti dengan `GROQ_MODEL`). Kutipan memakai penanda [n] yang diurai kembali menjadi sumber. Tanpa `GROQ_API_KEY`, asisten tampil dalam mode ekstraktif berlabel.
   - **Ditambah:** klaim reimbursement (dari FEATURE-MAP), video 2 menit (`docs/demo.mp4`), studi kasus (`docs/CASE-STUDY.md`).
 
 ## Tambahan dari FEATURE-MAP (2026-10-31)
@@ -87,4 +87,4 @@ Disisipkan ke milestone yang ada; estimasi MVP menjadi ±6 minggu paruh waktu.
 
 ## Definisi selesai
 Repo + README + demo (atau alasan ditunda) + tangkapan layar + studi kasus singkat + N-036 diperbarui.
-- **Status 2026-11-02:** repo lokal (git) + README + tangkapan layar + video + studi kasus selesai. Demo online ditunda karena butuh server PHP 8.5 + PostgreSQL; repo GitHub publik menunggu user membuatnya (pembuatan repo publik diblokir pemeriksa keamanan Claude Code).
+- **Status 2026-11-02:** repo lokal (git) + README + tangkapan layar + video + studi kasus selesai. Demo online ditunda karena butuh server PHP 8.5 + PostgreSQL; repo publik: https://github.com/geffaa/roster-hris.

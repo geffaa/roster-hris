@@ -17,7 +17,7 @@ interface Turn {
     question: string;
     segments: { text: string; cites: number[] }[];
     sources: Source[];
-    mode: 'claude' | 'extractive' | 'refused';
+    mode: 'ai' | 'extractive' | 'refused';
     note: string | null;
 }
 const props = defineProps<{ history: Turn[]; ai: boolean }>();

@@ -83,7 +83,7 @@ Semua tabel tenant memiliki `company_id` + global scope `BelongsToCompany`. Kolo
 | Web Push (VAPID) | Notifikasi PWA | Gratis; iOS hanya PWA ter-install |
 | SMTP (Mailpit di lokal) | Email notifikasi | Layanan email saat deploy: pilih nanti |
 | Peta (OpenStreetMap/MapLibre) | Pilih titik geofence | Patuhi kebijakan tile OSM; untuk demo boleh tile publik ringan |
-| Claude API (M5) | Asisten kebijakan | Berbayar per token; perlu verifikasi harga saat M5 |
+| Groq API (M5) | Asisten kebijakan + briefing payroll (`openai/gpt-oss-120b`) | Berbayar per token; harga dan rate limit berubah, cek console.groq.com/docs/models sebelum produksi |
 
 ## 7. Keamanan
 Sesi Laravel + 2FA TOTP untuk admin; policy per model; global scope tenant + tes isolasi; enkripsi kolom; rate limit login dan clock-in; audit untuk model sensitif dan akses lihat-penuh identitas; slip PDF disajikan lewat route terotorisasi (bukan URL publik).

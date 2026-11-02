@@ -12,7 +12,7 @@ use Throwable;
 /** A short briefing on what changed in a run and what to check before approving. Facts come from the run itself. */
 class PayrollSummary
 {
-    public function __construct(private ClaudeClient $claude) {}
+    public function __construct(private GroqClient $llm) {}
 
     /** @return array{points: list<string>, mode: string, note: ?string} */
     public function summarize(PayrollRun $run, User $user): array
@@ -20,9 +20,9 @@ class PayrollSummary
         $facts = $this->facts($run);
         $result = ['points' => $this->plain($facts), 'mode' => 'rules', 'note' => __('Written from the run figures by rules; switch on AI answers for a written briefing.')];
 
-        if ($this->claude->enabled()) {
+        if ($this->llm->enabled()) {
             try {
-                $r = $this->claude->ask(
+                $r = $this->llm->ask(
                     'You brief a payroll officer before they approve a payroll run. Use only the figures in the document. Write 3 to 6 short bullet points, most important first: what changed against last month and why, who needs a check before approval, and anything that will block payment. No preamble. Start each bullet with "- ". Name people. Use the currency as given.',
                     [['title' => "{$run->reference} figures", 'text' => $facts['text']]],
                     'Brief me on this run.',
@@ -30,8 +30,8 @@ class PayrollSummary
                 );
                 $text = trim(implode('', array_column($r['segments'], 'text')));
                 $points = array_values(array_filter(array_map(fn ($l) => trim(ltrim(trim($l), '-•* ')), explode("\n", $text))));
-                if ($points !== [] && $r['stop'] !== 'refusal') {
-                    $result = ['points' => $points, 'mode' => 'claude', 'note' => null];
+                if ($points !== [] && $r['stop'] !== 'content_filter') {
+                    $result = ['points' => $points, 'mode' => 'ai', 'note' => null];
                 }
             } catch (Throwable $e) {
                 Log::warning('Payroll summary fell back to rules', ['error' => $e->getMessage()]);

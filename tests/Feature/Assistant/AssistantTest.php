@@ -5,7 +5,7 @@ use App\Models\AssistantMessage;
 use App\Models\Company;
 use App\Models\Employee;
 use App\Models\PolicyDocument;
-use App\Services\Assistant\ClaudeClient;
+use App\Services\Assistant\GroqClient;
 use App\Services\Assistant\PolicyIndex;
 use App\Services\Assistant\PolicySearch;
 use App\Support\CurrentCompany;
@@ -20,7 +20,7 @@ beforeEach(function () {
     $this->me = Employee::factory()->for($this->t['company'])->create(['full_name' => 'Dimas Arya', 'hire_date' => '2023-06-05']);
     $this->colleague = Employee::factory()->for($this->t['company'])->create(['full_name' => 'Nadia Rahmawati', 'hire_date' => '2021-02-15']);
     $this->user = memberOf($this->t['company'], Role::Employee, $this->me);
-    config(['services.anthropic.key' => null]);
+    config(['services.groq.key' => null]);
     $this->travelTo(Carbon::parse('2026-11-16 10:00', 'Asia/Jakarta'));
 });
 
@@ -77,9 +77,9 @@ it('never retrieves another company\'s policies', function () {
     expect(app(PolicySearch::class)->search('zebracorn bonus'))->toBeEmpty();
 });
 
-it('sends Claude only policy passages and the asker\'s own data, and keeps the citations', function () {
-    config(['services.anthropic.key' => 'test-key']);
-    $fake = new class extends ClaudeClient
+it('sends the model only policy passages and the asker\'s own data, and keeps the citations', function () {
+    config(['services.groq.key' => 'test-key']);
+    $fake = new class extends GroqClient
     {
         /** @var list<array{title: string, text: string}> */
         public array $documents = [];
@@ -88,22 +88,22 @@ it('sends Claude only policy passages and the asker\'s own data, and keeps the c
         {
             $this->documents = $documents;
 
-            return ['segments' => [['text' => 'You have 12 days left.', 'cites' => [0]], ['text' => ' Leave is approved by your manager.', 'cites' => [1]]], 'model' => 'claude-opus-5-5', 'stop' => 'end_turn', 'input_tokens' => 900, 'output_tokens' => 40];
+            return ['segments' => [['text' => 'You have 12 days left.', 'cites' => [0]], ['text' => ' Leave is approved by your manager.', 'cites' => [1]]], 'model' => 'openai/gpt-oss-120b', 'stop' => 'end_turn', 'input_tokens' => 900, 'output_tokens' => 40];
         }
     };
-    app()->instance(ClaudeClient::class, $fake);
+    app()->instance(GroqClient::class, $fake);
 
     $json = signIn($this->user)->postJson(route('me.ask.store'), ['question' => 'How many leave days do I have and who approves them?'])->json();
 
-    expect($json['mode'])->toBe('claude')->and($json['segments'][0]['cites'])->toBe([0])
+    expect($json['mode'])->toBe('ai')->and($json['segments'][0]['cites'])->toBe([0])
         ->and($fake->documents[0]['title'])->toContain('only you can see')
         ->and(json_encode($fake->documents))->toContain('Dimas Arya')->not->toContain('Nadia Rahmawati');
     expect(AssistantMessage::sole()->output_tokens)->toBe(40);
 });
 
-it('falls back to passages when Claude fails', function () {
-    config(['services.anthropic.key' => 'test-key']);
-    app()->instance(ClaudeClient::class, new class extends ClaudeClient
+it('falls back to passages when the model fails', function () {
+    config(['services.groq.key' => 'test-key']);
+    app()->instance(GroqClient::class, new class extends GroqClient
     {
         public function ask(string $system, array $documents, string $question, int $maxTokens = 2000): array
         {

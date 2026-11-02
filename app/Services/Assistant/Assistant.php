@@ -10,11 +10,11 @@ use Throwable;
 
 /**
  * Ask HR: answers from the company's policies and the person's own data, always with sources.
- * With Claude configured it writes a short cited answer; otherwise it shows the best matching passages.
+ * With Groq configured it writes a short cited answer; otherwise it shows the best matching passages.
  */
 class Assistant
 {
-    public function __construct(private PolicySearch $search, private PersonalContext $personal, private ClaudeClient $claude) {}
+    public function __construct(private PolicySearch $search, private PersonalContext $personal, private GroqClient $llm) {}
 
     /** @return array{segments: list<array{text: string, cites: list<int>}>, sources: list<array<string, mixed>>, mode: string, note: ?string, id: int} */
     public function ask(User $user, Company $company, string $question): array
@@ -39,14 +39,14 @@ class Assistant
             ]);
         }
 
-        if ($this->claude->enabled()) {
+        if ($this->llm->enabled()) {
             try {
-                $r = $this->claude->ask($this->system($company, $user), $documents, $question);
-                if ($r['stop'] === 'refusal' || $r['segments'] === []) {
+                $r = $this->llm->ask($this->system($company, $user), $documents, $question);
+                if ($r['stop'] === 'content_filter' || $r['segments'] === []) {
                     throw new \RuntimeException('No answer: '.($r['stop'] ?? 'empty'));
                 }
 
-                return $this->save($user, $company, $question, ['segments' => $r['segments'], 'sources' => $sources, 'mode' => 'claude', 'note' => null], $r);
+                return $this->save($user, $company, $question, ['segments' => $r['segments'], 'sources' => $sources, 'mode' => 'ai', 'note' => null], $r);
             } catch (Throwable $e) {
                 Log::warning('Assistant fell back to extractive mode', ['error' => $e->getMessage()]);
 

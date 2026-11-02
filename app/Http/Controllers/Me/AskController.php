@@ -21,7 +21,7 @@ class AskController extends Controller
         return Inertia::render('me/Ask', [
             'history' => AssistantMessage::where('user_id', $request->user()->id)->where('kind', 'question')->latest()->limit(10)->get()->reverse()->values()
                 ->map(fn (AssistantMessage $m) => ['id' => $m->id, 'question' => $m->question, ...$m->answer]),
-            'ai' => filled(config('services.anthropic.key')),
+            'ai' => filled(config('services.groq.key')),
         ]);
     }
 

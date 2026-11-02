@@ -35,9 +35,10 @@ return [
         ],
     ],
 
-    // HR assistant. Without a key Roster answers in extractive mode (matching policy passages, no generated text).
-    'anthropic' => [
-        'key' => env('ANTHROPIC_API_KEY'),
+    // HR assistant via Groq (OpenAI-compatible API). Without a key Roster answers in extractive mode (matching policy passages).
+    'groq' => [
+        'key' => env('GROQ_API_KEY'),
+        'model' => env('GROQ_MODEL', 'openai/gpt-oss-120b'),
     ],
 
 ];

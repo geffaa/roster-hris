@@ -1,7 +1,7 @@
 # Case study: Roster, a multi-country HRIS with a rule-pack payroll engine
 
 **Role:** solo full-stack developer (product, design system, backend, frontend, tests)
-**Stack:** Laravel 12, PHP 8.5, PostgreSQL 17, Inertia + Vue 3 (TypeScript), Pest, Playwright, Claude API
+**Stack:** Laravel 12, PHP 8.5, PostgreSQL 17, Inertia + Vue 3 (TypeScript), Pest, Playwright, Groq (OpenAI-compatible API)
 **Scope:** six milestones; everything below is in the repository with tests and synthetic demo data.
 
 ## The problem
@@ -23,7 +23,7 @@ Growing companies in Indonesia run HR on spreadsheets and a payroll vendor. Leav
 - **Employee app:**
   - Installable to the home screen, in English and Bahasa Indonesia, with push notifications.
   - Covers clock-in, time off, attendance corrections, overtime, expense claims with receipt photos, payslips, and bank account changes that HR approves.
-- **Ask HR:** an assistant that answers only from the company's policies and the asker's own HR data, with numbered sources. Answers come from Claude Opus 5.5 when an API key is set. Without a key, the closest policy passages are shown and labelled. Payroll officers also get a briefing on what changed in a run before they approve it.
+- **Ask HR:** an assistant that answers only from the company's policies and the asker's own HR data, with numbered sources. Answers are written by a Groq-hosted model (gpt-oss-120b) when an API key is set. Without a key, the closest policy passages are shown and labelled. Payroll officers also get a briefing on what changed in a run before they approve it.
 - **Operations:**
   - Home page by role, attendance board, leave calendar.
   - Payroll and contribution reports that add up to the payslips, with Excel export.
