@@ -810,3 +810,17 @@ textarea.input,table.rpt textarea.input{height:auto;padding:8px 12px;line-height
 .popwrap > .pop.bellpop{left:auto;right:0;min-width:0;z-index:50}
 .monthsel{width:220px}
 @media (max-width:640px){.monthsel{width:100%}}
+/* audit log */
+.auditf{display:flex;flex-wrap:wrap;gap:var(--s3);padding:var(--s4) var(--s5);border-bottom:1px solid var(--line)}
+.auditf .fsel{width:180px}
+.audit{list-style:none;margin:0;padding:0}
+.audit > li{padding:var(--s4) var(--s6);border-bottom:1px solid var(--line);display:grid;gap:var(--s2)}
+.au-h{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s2) var(--s3)}
+.au-what{font-size:15px}
+.au-who{margin-left:auto;font-size:14px;color:var(--text-2)}
+.au-ch{list-style:none;margin:0;padding:var(--s2) var(--s3);background:var(--surface-2);border-radius:var(--r);display:grid;gap:4px}
+.au-ch li{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:13px}
+.au-ch li > .muted:first-child{min-width:140px}
+.au-meta{margin:0}
+.pgn{display:flex;align-items:center;gap:var(--s2)}
+@media (max-width:640px){.auditf .fsel{width:calc(50% - var(--s2))}.audit > li{padding:var(--s4)}.au-who{margin-left:0;width:100%}}

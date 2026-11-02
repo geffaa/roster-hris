@@ -3,7 +3,7 @@ import { onClickOutside } from '@vueuse/core';
 import { CalendarDays, ChevronLeft, ChevronRight } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 
-const props = defineProps<{ modelValue: string | null; label: string; min?: string }>();
+const props = defineProps<{ modelValue: string | null; label: string; min?: string; placeholder?: string }>();
 const emit = defineEmits<{ 'update:modelValue': [value: string] }>();
 
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -68,7 +68,7 @@ function pick(value: string) {
     <div ref="root" class="popwrap">
         <button type="button" class="trigger" :aria-label="label" aria-haspopup="dialog" :aria-expanded="open" @click="toggle">
             <CalendarDays class="icon sm" />
-            <span class="val" :class="{ ph: !display }">{{ display ?? 'Pick a date' }}</span>
+            <span class="val" :class="{ ph: !display }">{{ display ?? (props.placeholder ?? 'Pick a date') }}</span>
         </button>
         <div v-if="open" class="pop cal" role="dialog" :aria-label="label" @keydown.esc="open = false">
             <div class="cal-h">

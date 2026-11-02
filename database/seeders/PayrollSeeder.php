@@ -19,6 +19,7 @@ use App\Support\CurrentCompany;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Rule packs (Indonesia ID-2026.1 and ID-2026.2, a pending ID-2027.1; Generic), salary components, bank details,
@@ -156,6 +157,7 @@ class PayrollSeeder extends Seeder
         $current = app(CurrentCompany::class);
         $current->set($company);
         $runs = app(PayrollRuns::class);
+        config(['audit.console' => true]); // approvals and locks are part of the audit trail
         for ($m = 1; $m <= $openMonth; $m++) {
             $month = CarbonImmutable::create(2026, $m, 1);
             $this->travel($month->endOfMonth()->setTime(9, 0));
@@ -169,13 +171,19 @@ class PayrollSeeder extends Seeder
                     $runs->review($item, $officer);
                 }
             }
+            Auth::setUser($officer);
             $runs->approve($run, $officer);
+            $this->travel($month->endOfMonth()->setTime(11, 20));
+            Auth::setUser($approver);
             $runs->approve($run->refresh(), $approver);
+            Auth::setUser($officer);
             $runs->lock($run->refresh(), $officer);
             $this->travel($month->endOfMonth()->setTime(15, 0));
             $runs->publish($run->refresh());
         }
         $this->travel(null);
+        Auth::forgetUser();
+        config(['audit.console' => false]);
         $current->forget();
         PayrollRun::withoutGlobalScopes()->where('company_id', $company->id)->count();
     }

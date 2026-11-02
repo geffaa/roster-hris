@@ -81,7 +81,7 @@ const groups = computed<Group[]>(() => [
     },
     { name: 'Talent', icon: Briefcase, soon: true, subs: [{ name: 'Recruitment', soon: 'P2' }, { name: 'Performance', soon: 'P2' }] },
     { name: 'Workplace', icon: Building2, soon: true, subs: [{ name: 'Documents', soon: 'P2' }, { name: 'Announcements', soon: 'P2' }] },
-    { name: 'Insights', icon: ChartColumn, subs: [...(seesDirectory.value ? [{ name: 'Reports', href: route('reports') }] : []), { name: 'Audit log', soon: 'M4' }] },
+    { name: 'Insights', icon: ChartColumn, subs: [...(seesDirectory.value ? [{ name: 'Reports', href: route('reports') }] : []), ...(can('audit.view') ? [{ name: 'Audit log', href: route('audit-log') }] : [])] },
 ]);
 
 const currentGroup = computed(() => groups.value.find((g) => g.subs.some((s) => s.name === props.current))?.name ?? null);

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\TwoFactorController;
 use App\Http\Controllers\CompanySwitchController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Insights\AuditLogController;
 use App\Http\Controllers\Insights\ReportController;
 use App\Http\Controllers\Me\MyAttendanceController;
 use App\Http\Controllers\Me\PayslipController;
@@ -92,6 +93,7 @@ Route::middleware(['auth', 'company'])->group(function () {
             Route::post('{version}/reject', 'reject')->name('reject');
             Route::post('{version}/discard', 'discard')->name('discard');
         });
+        Route::get('audit-log', AuditLogController::class)->name('audit-log');
         Route::get('reports/export', [ReportController::class, 'export'])->middleware('throttle:20,1')->name('reports.export');
 
         Route::prefix('employees/import')->name('employees.import.')->controller(EmployeeImportController::class)->group(function () {
