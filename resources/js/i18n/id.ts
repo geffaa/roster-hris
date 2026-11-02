@@ -2,6 +2,7 @@ import type { Dict } from './index';
 
 const id: Dict = {
     nav: { today: 'Hari ini', timeOff: 'Cuti', attendance: 'Absensi', pay: 'Gaji', me: 'Saya', workspace: 'Buka ruang kerja' },
+    install: { title: 'Pasang Roster di layar utama', body: 'Buka seperti aplikasi supaya clock-in lebih cepat.', action: 'Pasang', ios: 'Ketuk Bagikan, lalu "Tambah ke Layar Utama".' },
     bell: { title: 'Notifikasi', empty: 'Belum ada yang baru. Persetujuan dan slip gaji akan muncul di sini.', readAll: 'Tandai sudah dibaca' },
     me: {
         title: 'Saya',
@@ -30,6 +31,13 @@ const id: Dict = {
         pending: 'Rekening baru {bank} ···· {last4}, dikirim {date}. Payroll tetap memakai rekening lama sampai HR menyetujui.',
         withdraw: 'Tarik kembali',
         why: 'HR memeriksa setiap perubahan sebelum dipakai, supaya gaji Anda aman dari pengambilalihan rekening.',
+        push: 'Notifikasi di HP ini',
+        pushHint: 'Dapat pemberitahuan saat pengajuan diputuskan atau slip gaji siap, walau Roster tertutup.',
+        pushOn: 'Aktif di HP ini',
+        pushOff: 'Aktifkan',
+        pushDisable: 'Matikan',
+        pushDenied: 'Diblokir di pengaturan browser. Izinkan notifikasi untuk situs ini, lalu kembali ke sini.',
+        pushUnsupported: 'Browser ini tidak bisa menerima notifikasi. Di iPhone, tambahkan Roster ke layar utama dulu.',
         language: 'Bahasa',
         langHint: 'Dipakai di aplikasi ini, email, dan slip gaji.',
         demo: 'Data demo sintetis.',

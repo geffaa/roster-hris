@@ -3,7 +3,8 @@ import RSelect from '@/components/roster/RSelect.vue';
 import { useT } from '@/i18n';
 import EmployeeAppLayout from '@/layouts/EmployeeAppLayout.vue';
 import { Head, router, useForm } from '@inertiajs/vue3';
-import { Clock3, Landmark, ShieldCheck } from 'lucide-vue-next';
+import { usePwa } from '@/composables/usePwa';
+import { BellRing, Clock3, Landmark, ShieldCheck } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 
 const props = defineProps<{
@@ -23,6 +24,7 @@ const props = defineProps<{
     banks: string[];
 }>();
 const { t, locale, dateLocale } = useT();
+const { push, enable, disable } = usePwa();
 const date = (iso: string) => new Intl.DateTimeFormat(dateLocale.value, { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(`${iso}T00:00:00`));
 
 const contact = useForm({ phone: props.me.phone ?? '' });
@@ -88,6 +90,14 @@ function setLocale(l: 'en' | 'id') {
                     <button type="submit" class="btn primary" :disabled="bank.processing || !bank.account_number">{{ t('me.send') }}</button>
                 </div>
             </form>
+        </section>
+
+        <section class="sx">
+            <h2>{{ t('me.push') }}</h2>
+            <p class="small muted">{{ t('me.pushHint') }}</p>
+            <div v-if="push === 'on'" class="pushrow"><span class="badge success"><BellRing class="icon" />{{ t('me.pushOn') }}</span><button type="button" class="linkbtn small" @click="disable">{{ t('me.pushDisable') }}</button></div>
+            <button v-else-if="push === 'off' || push === 'busy'" type="button" class="btn" :disabled="push === 'busy'" @click="enable"><BellRing class="icon sm" />{{ t('me.pushOff') }}</button>
+            <p v-else class="note small">{{ push === 'denied' ? t('me.pushDenied') : t('me.pushUnsupported') }}</p>
         </section>
 
         <section class="sx">

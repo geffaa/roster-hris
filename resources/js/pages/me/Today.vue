@@ -1,9 +1,19 @@
 <script setup lang="ts">
 import { formatDate, humanMinutes } from '@/composables/useRoster';
+import { usePwa } from '@/composables/usePwa';
+import { useT } from '@/i18n';
 import EmployeeAppLayout from '@/layouts/EmployeeAppLayout.vue';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
-import { CalendarDays, CircleAlert, CloudOff, LocateFixed, LogIn, LogOut, MapPin, MapPinOff, PartyPopper, Plane, Timer, Wrench } from 'lucide-vue-next';
+import { CalendarDays, Download, X, CircleAlert, CloudOff, LocateFixed, LogIn, LogOut, MapPin, MapPinOff, PartyPopper, Plane, Timer, Wrench } from 'lucide-vue-next';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
+
+const { canInstall, install, standalone, ios } = usePwa();
+const { t } = useT();
+const hideInstall = ref(typeof localStorage !== 'undefined' && (() => { try { return localStorage.getItem('roster.install.hide') === '1'; } catch { return false; } })());
+function dismissInstall() {
+    hideInstall.value = true;
+    try { localStorage.setItem('roster.install.hide', '1'); } catch { /* private mode */ }
+}
 
 interface Day {
     date: string;
@@ -131,6 +141,12 @@ const dayState = (d: Day) => {
 <template>
     <Head title="Today" />
     <EmployeeAppLayout current="today">
+        <div v-if="!standalone && !hideInstall && (canInstall || ios)" class="installbar">
+            <img src="/icons/icon-192.png" alt="" />
+            <span><b>{{ t('install.title') }}</b><small>{{ canInstall ? t('install.body') : t('install.ios') }}</small></span>
+            <button v-if="canInstall" type="button" class="btn sm primary" @click="install"><Download class="icon sm" />{{ t('install.action') }}</button>
+            <button type="button" class="ibtn" aria-label="Dismiss" @click="dismissInstall"><X class="icon sm" /></button>
+        </div>
         <div class="hi">
             <h1>Hi, {{ employee.first_name }}</h1>
             <p>{{ dateLabel }}</p>

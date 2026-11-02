@@ -879,3 +879,7 @@ a.acard:hover{text-decoration:none;border-color:var(--line-strong)}
 @media (max-width:1100px){.setwrap:has(.setform){grid-template-columns:minmax(0,1fr)}.setform{position:static}}
 .swt{text-align:left}
 .setwrap table.t td{white-space:nowrap}
+.installbar{display:flex;align-items:center;gap:var(--s3);padding:var(--s3);background:#fff;border:1px solid var(--line);border-radius:var(--r-lg)}
+.installbar img{width:40px;height:40px;border-radius:10px;flex:none}
+.installbar > span{flex:1;min-width:0}.installbar b{display:block;font-size:14px}.installbar small{display:block;font-size:13px;color:var(--text-3)}
+.pushrow{display:flex;align-items:center;gap:var(--s3)}

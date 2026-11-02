@@ -1,0 +1,19 @@
+{
+  "name": "Roster",
+  "short_name": "Roster",
+  "description": "Clock in, request time off and read your payslips.",
+  "start_url": "/me/today?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#F4F6F5",
+  "theme_color": "#0F6E66",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Clock in", "url": "/me/today", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Payslips", "url": "/me/pay", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] }
+  ]
+}

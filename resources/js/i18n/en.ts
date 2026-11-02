@@ -1,5 +1,6 @@
 export default {
     nav: { today: 'Today', timeOff: 'Time off', attendance: 'Attendance', pay: 'Pay', me: 'Me', workspace: 'Open workspace' },
+    install: { title: 'Put Roster on your home screen', body: 'Open it like an app to clock in faster.', action: 'Install', ios: 'Tap Share, then "Add to Home Screen".' },
     bell: { title: 'Notifications', empty: 'Nothing new. Approvals and payslips will show up here.', readAll: 'Mark all read' },
     me: {
         title: 'Me',
@@ -28,6 +29,13 @@ export default {
         pending: 'New account {bank} ···· {last4}, sent {date}. Payroll keeps using your current account until HR approves.',
         withdraw: 'Withdraw',
         why: 'HR checks every change before it is used, to protect your salary from account takeover.',
+        push: 'Notifications on this phone',
+        pushHint: 'Get a ping when a request is decided or a payslip is ready, even when Roster is closed.',
+        pushOn: 'On for this phone',
+        pushOff: 'Turn on',
+        pushDisable: 'Turn off',
+        pushDenied: 'Blocked in your browser settings. Allow notifications for this site, then come back.',
+        pushUnsupported: 'This browser cannot receive notifications. On iPhone, add Roster to your home screen first.',
         language: 'Language',
         langHint: 'Used in this app, emails and payslips.',
         demo: 'Synthetic demo data.',

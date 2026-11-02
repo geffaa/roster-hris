@@ -44,6 +44,7 @@ class HandleInertiaRequests extends Middleware
         return [
             ...parent::share($request),
             'name' => config('app.name'),
+            'vapidPublicKey' => config('webpush.vapid.public_key'),
             'auth' => [
                 'user' => $user ? [
                     'id' => $user->id,
