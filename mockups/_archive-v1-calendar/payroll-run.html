@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RUN-2026-10 · Payroll review · Roster</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="roster.css">
+<style>
+.sheet{display:grid;grid-template-columns:minmax(200px,240px) minmax(0,1fr) minmax(220px,280px);gap:var(--s6);align-items:end;padding:var(--s5) var(--s6) var(--s5);border-bottom:1px solid var(--n3);background:var(--n1)}
+.month{font:600 60px/.9 var(--display);letter-spacing:-.01em}
+.month small{display:block;font:500 14px/1.4 var(--text);color:var(--n5);margin-top:var(--s2);letter-spacing:0}
+.strip{min-width:0}
+.strip .scroller{overflow-x:auto;padding-bottom:2px}
+.strip .days{min-width:620px}
+.spans{display:grid;grid-template-columns:repeat(31,minmax(0,1fr));gap:2px;min-width:620px;margin-top:var(--s2);row-gap:4px}
+.runid{text-align:right}
+.runid h1{font:600 24px/1.1 var(--display)}
+.runid p{color:var(--n5);font-size:13px;margin-top:2px}
+.appr{display:flex;justify-content:flex-end;gap:var(--s2);margin-top:var(--s3)}
+.appr div{border:1px dashed var(--n4);padding:6px 10px;font-size:12px;color:var(--n6);text-align:left;min-width:118px}
+.appr div b{display:block;font-weight:600;color:var(--n7)}
+.appr div.signed{border-style:solid;border-color:var(--green);background:var(--green-tint)}
+
+.work{display:grid;grid-template-columns:minmax(0,1fr) 440px;min-height:calc(100vh - 60px - 170px)}
+.list{padding:var(--s5) var(--s5) var(--s7) var(--s6);border-right:1px solid var(--n3);min-width:0}
+.totals{display:flex;flex-wrap:wrap;gap:var(--s3) var(--s6);margin-bottom:var(--s5)}
+.totals div{font-size:12px;color:var(--n5)}
+.totals b{display:block;font:600 24px/1.15 var(--display);color:var(--n7)}
+.totals .delta{color:var(--n6);font-size:12px}
+.tools{display:flex;flex-wrap:wrap;gap:var(--s3);align-items:center;margin-bottom:var(--s3)}
+.seg{display:inline-flex;border:1px solid var(--n7)}
+.seg button{border:0;background:var(--n0);padding:7px 12px;font-size:13px;font-weight:500;color:var(--n6)}
+.seg button+button{border-left:1px solid var(--n7)}
+.seg button[aria-pressed=true]{background:var(--n7);color:#fff}
+.search{display:flex;align-items:center;gap:var(--s2);border:1px solid var(--n3);background:var(--n0);padding:6px 10px;min-width:220px;color:var(--n5)}
+.search input{border:0;outline:0;font:inherit;background:transparent;width:100%;color:var(--n7)}
+.progress{margin-left:auto;font-size:13px;color:var(--n6)}
+.progress b{font-weight:600;color:var(--n7)}
+
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:720px}
+th{text-align:right;font-weight:500;font-size:12px;color:var(--n5);padding:8px 10px;border-bottom:1px solid var(--n7);white-space:nowrap}
+th button{all:unset;cursor:pointer}th button:focus-visible{outline:2px solid var(--green)}
+th:first-child,td:first-child{text-align:left}
+td{padding:10px;border-bottom:1px solid var(--n3);text-align:right;white-space:nowrap}
+td small{display:block;color:var(--n5);font-size:12px;white-space:normal}
+tbody tr{cursor:pointer}
+tbody tr:hover{background:var(--n2)}
+tbody tr[aria-selected=true]{background:var(--green-tint)}
+tbody tr[aria-selected=true] td:first-child{box-shadow:inset 3px 0 0 var(--green)}
+td.mark{width:36px;text-align:center}
+.foot td{font-weight:700;border-bottom:0;border-top:1px solid var(--n7)}
+
+.detail{padding:var(--s5) var(--s6) var(--s7) var(--s5);background:var(--n0)}
+.detail h2{font:600 28px/1.1 var(--display)}
+.detail .sub{color:var(--n5);font-size:13px;margin:2px 0 var(--s4)}
+.alert{display:flex;gap:var(--s3);border:1px solid #EBB9BB;background:var(--red-tint);padding:var(--s3);font-size:13px;margin-bottom:var(--s4);color:var(--n7)}
+.alert .icon{color:var(--red);margin-top:2px}
+.line{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:var(--s3);padding:9px 0;border-bottom:1px solid var(--n3)}
+.line .v{text-align:right;font-weight:600}
+.line .w{grid-column:1/-1;font-size:12px;color:var(--n5);margin-top:2px}
+.line .w a{color:var(--n6)}
+.line.sum{border-bottom:1px solid var(--n7)}
+.line.sum .v,.line.sum span:first-child{font-weight:700}
+.line.net .v{font:700 24px/1 var(--display)}
+.group{font-size:12px;color:var(--n5);margin:var(--s4) 0 0;font-weight:600}
+.empl{margin-top:var(--s4);font-size:12px;color:var(--n5);border-top:1px dashed var(--n3);padding-top:var(--s3)}
+.cta{display:flex;flex-wrap:wrap;gap:var(--s2);margin-top:var(--s5)}
+.legal{margin:var(--s5) var(--s6);display:flex;justify-content:space-between;gap:var(--s4)}
+
+@media (max-width:1180px){
+  .sheet{grid-template-columns:1fr;gap:var(--s4)}
+  .runid{text-align:left}.appr{justify-content:flex-start}
+  .work{grid-template-columns:1fr}
+  .list{border-right:0;padding:var(--s5) var(--s4)}
+  .detail{padding:var(--s5) var(--s4);border-top:1px solid var(--n3)}
+}
+@media (max-width:720px){
+  .mast{padding:0 var(--s4);gap:var(--s4);overflow-x:auto}
+  .co span{display:none}
+  .sheet{padding:var(--s4)}
+  .month{font-size:44px}
+  .legal{margin:var(--s4);flex-direction:column}
+  .progress{margin-left:0}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17.5v.01"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></symbol>
+  <symbol id="i-message" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></symbol>
+  <symbol id="i-sortdown" viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M19 12a7 7 0 1 1-2.1-5"/><path d="M19 4v4h-4"/></symbol>
+</svg>
+
+<header class="mast">
+  <a class="brand" href="index.html">Roster</a>
+  <nav class="nav" aria-label="Main">
+    <a href="#" aria-current="page">Payroll</a><a href="#">Employees</a><a href="#">Attendance</a><a href="#">Leave</a><a href="rule-pack.html">Rule packs</a><a href="#">Reports</a>
+  </nav>
+  <div class="co"><span>Company</span>
+    <label class="sr" for="co">Company</label>
+    <select id="co"><option>PT Sinar Laut Logistik · ID</option><option>Northgate Supply Ltd · Generic</option></select>
+    <span class="who" aria-label="Signed in as Sari Wulandari, Payroll Officer">SW</span>
+  </div>
+</header>
+
+<section class="sheet" aria-labelledby="run-title">
+  <div class="month">October 2026<small>22 working days · no public holidays this month</small></div>
+  <div class="strip">
+    <div class="scroller">
+      <div class="days" aria-label="October 2026 working days">
+        <div class="d">1<i>Th</i></div><div class="d">2<i>Fr</i></div><div class="d we">3<i>Sa</i></div><div class="d we">4<i>Su</i></div><div class="d">5<i>Mo</i></div><div class="d">6<i>Tu</i></div><div class="d">7<i>We</i></div><div class="d">8<i>Th</i></div><div class="d">9<i>Fr</i></div><div class="d we">10<i>Sa</i></div><div class="d we">11<i>Su</i></div><div class="d">12<i>Mo</i></div><div class="d">13<i>Tu</i></div><div class="d">14<i>We</i></div><div class="d">15<i>Th</i></div><div class="d">16<i>Fr</i></div><div class="d we">17<i>Sa</i></div><div class="d we">18<i>Su</i></div><div class="d">19<i>Mo</i></div><div class="d">20<i>Tu</i></div><div class="d">21<i>We</i></div><div class="d">22<i>Th</i></div><div class="d">23<i>Fr</i></div><div class="d we">24<i>Sa</i></div><div class="d we">25<i>Su</i></div><div class="d">26<i>Mo</i></div><div class="d">27<i>Tu</i></div><div class="d">28<i>We</i></div><div class="d">29<i>Th</i></div><div class="d">30<i>Fr</i></div><div class="d we">31<i>Sa</i></div>
+      </div>
+      <div class="spans">
+        <div class="span" style="grid-column:14/32"></div>
+        <div class="span-label" style="grid-column:14/32">Nadia Putri joined 14 Oct · 14 of 22 working days paid</div>
+        <div class="span leave" style="grid-column:20/22"></div>
+        <div class="span-label" style="grid-column:20/32">Dimas Pratama · 20–21 Oct unpaid leave</div>
+      </div>
+    </div>
+  </div>
+  <div class="runid">
+    <h1 id="run-title">RUN-2026-10 · Calculated</h1>
+    <p>38 employees · rule pack ID-2026.2 · calculated 30 Oct, 16:12</p>
+    <div class="appr" aria-label="Approvals">
+      <div><b>Approval 1</b>Payroll Officer · open</div>
+      <div><b>Approval 2</b>HR Admin · open</div>
+    </div>
+  </div>
+</section>
+
+<main class="work">
+  <section class="list" aria-label="Employees in this run">
+    <div class="totals">
+      <div>Gross<b>Rp 412,860,000</b></div>
+      <div>PPh 21 withheld<b>Rp 18,904,300</b></div>
+      <div>Employee contributions<b>Rp 15,212,640</b></div>
+      <div>Employer contributions<b>Rp 27,483,900</b></div>
+      <div>Net pay<b>Rp 378,743,060</b><span class="delta">+2.3% vs September</span></div>
+    </div>
+    <div class="tools">
+      <div class="seg" role="group" aria-label="Show">
+        <button aria-pressed="false">All 38</button><button aria-pressed="true">Changed 6</button><button aria-pressed="false">Flagged 1</button>
+      </div>
+      <label class="search"><svg class="icon"><use href="#i-search"/></svg><span class="sr">Search employees</span><input placeholder="Search name or ID"></label>
+      <p class="progress"><b>4 of 6</b> changes reviewed</p>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr>
+          <th scope="col"><button>Employee</button></th><th scope="col"><button>Gross</button></th><th scope="col">PPh 21</th><th scope="col">Contrib.</th><th scope="col"><button>Net</button></th><th scope="col" aria-sort="descending"><button style="display:inline-flex;gap:4px;align-items:center">vs Sep<svg class="icon" style="width:12px;height:12px"><use href="#i-sortdown"/></svg></button></th><th scope="col"><span class="sr">Reviewed</span></th>
+        </tr></thead>
+        <tbody>
+          <tr aria-selected="true"><td>Rizky Hamdani<small>Fleet Supervisor · Q3 performance bonus</small></td><td>15,900,000</td><td>1,113,000</td><td>543,470</td><td>14,243,530</td><td><span class="flag">+41.2%</span></td><td class="mark"></td></tr>
+          <tr><td>Nadia Putri<small>Customer Service · joined 14 Oct</small></td><td>3,786,360</td><td>0</td><td>151,450</td><td>3,634,910</td><td>new</td><td class="mark"></td></tr>
+          <tr><td>Bagus Santoso<small>Driver · 14 h overtime</small></td><td>5,600,000</td><td>0</td><td>224,000</td><td>5,376,000</td><td>+6.3%</td><td class="mark tick"><svg class="icon" aria-label="Reviewed"><use href="#i-check"/></svg></td></tr>
+          <tr><td>Dimas Pratama<small>Warehouse Staff · 2 days unpaid leave</small></td><td>5,681,820</td><td>56,820</td><td>227,270</td><td>5,397,730</td><td>−9.1%</td><td class="mark tick"><svg class="icon" aria-label="Reviewed"><use href="#i-check"/></svg></td></tr>
+          <tr><td>Putu Ardana<small>Mechanic · allowance change from 1 Oct</small></td><td>7,350,000</td><td>110,250</td><td>294,000</td><td>6,945,750</td><td>+5.0%</td><td class="mark tick"><svg class="icon" aria-label="Reviewed"><use href="#i-check"/></svg></td></tr>
+          <tr><td>Wulan Sari<small>Admin Staff · resigned 24 Oct</small></td><td>4,363,640</td><td>0</td><td>174,550</td><td>4,189,090</td><td>−27.3%</td><td class="mark tick"><svg class="icon" aria-label="Reviewed"><use href="#i-check"/></svg></td></tr>
+        </tbody>
+        <tfoot><tr class="foot"><td>6 of 38 shown</td><td>42,681,820</td><td>1,280,070</td><td>1,614,740</td><td>39,787,010</td><td></td><td></td></tr></tfoot>
+      </table>
+    </div>
+  </section>
+
+  <aside class="detail" aria-labelledby="emp-name">
+    <h2 id="emp-name">Rizky Hamdani</h2>
+    <p class="sub">EMP-0117 · Fleet Supervisor · married, 1 dependant (K/1) · TER category B</p>
+    <div class="alert" role="status"><svg class="icon"><use href="#i-alert"/></svg><div><b>Net pay is 41.2% higher than September.</b> Explained by the one-off Q3 bonus of Rp 3,000,000, which also moves this month's TER bracket.</div></div>
+
+    <p class="group">Earnings</p>
+    <div class="line"><span>Base salary</span><span class="v">11,500,000</span><span class="w">22 of 22 working days · effective since 1 Jan 2026</span></div>
+    <div class="line"><span>Fixed allowance</span><span class="v">1,400,000</span><span class="w">Recurring · taxable</span></div>
+    <div class="line"><span>Q3 performance bonus</span><span class="v">3,000,000</span><span class="w">One-off · taxable · entered by Ayu Lestari, 28 Oct</span></div>
+    <div class="line sum"><span>Gross</span><span class="v">15,900,000</span></div>
+
+    <p class="group">Deductions</p>
+    <div class="line"><span>PPh 21</span><span class="v">−1,113,000</span><span class="w">TER B 7% of 15,900,000 · <a href="rule-pack.html">ID-2026.2</a></span></div>
+    <div class="line"><span>JHT (employee)</span><span class="v">−318,000</span><span class="w">2% of 15,900,000 · no wage cap</span></div>
+    <div class="line"><span>JP (employee)</span><span class="v">−105,470</span><span class="w">1% of wage cap 10,547,000</span></div>
+    <div class="line"><span>BPJS Kesehatan (employee)</span><span class="v">−120,000</span><span class="w">1% of wage cap 12,000,000</span></div>
+    <div class="line sum net"><span>Net pay</span><span class="v">14,243,530</span></div>
+
+    <p class="empl">Employer also pays Rp 1,412,800 in contributions (JHT 3.7%, JP 2% of cap, JKK 0.54%, JKM 0.3%, BPJS Kesehatan 4% of cap), not deducted from pay.</p>
+
+    <div class="cta">
+      <button class="btn primary"><svg class="icon"><use href="#i-check"/></svg>Mark reviewed</button>
+      <button class="btn"><svg class="icon"><use href="#i-message"/></svg>Ask a question</button>
+      <button class="btn quiet"><svg class="icon"><use href="#i-refresh"/></svg>Recalculate</button>
+    </div>
+  </aside>
+</main>
+
+<footer class="legal">
+  <p class="synthetic">Synthetic demo data. Tax brackets and contribution rates are illustrative and pending verification against official sources.</p>
+  <button class="btn" disabled title="Available after both approvals"><svg class="icon"><use href="#i-download"/></svg>Bank file (locked until approved)</button>
+</footer>
+</body>
+</html>

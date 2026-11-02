@@ -1,0 +1,74 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Roster: Office Wall Calendar</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--green:#0E5A4F;--green-2:#0A4840;--red:#D2232A;--ink:#16181D;--ink-2:#3C4048;--ink-3:#6A6F78;--line:#DADDD8;--paper:#FBFBF8;--tint:#E6F0EC;--wk:#F1F2EE}
+*{box-sizing:border-box;margin:0}
+body{width:1440px;height:900px;overflow:hidden;background:var(--paper);color:var(--ink);font:14px/1.45 "Public Sans",sans-serif;font-variant-numeric:tabular-nums}
+.mast{height:64px;background:var(--green);color:#fff;display:flex;align-items:center;padding:0 32px;gap:40px}
+.brand{font:700 26px "Barlow Condensed";letter-spacing:.01em}
+.nav{display:flex;gap:28px;font-weight:500;color:#CFE3DD}.nav b{color:#fff;font-weight:600;border-bottom:2px solid #fff;padding-bottom:20px;margin-bottom:-22px}
+.co{margin-left:auto;font-size:13px;color:#CFE3DD}.co strong{color:#fff;font-weight:600}
+.sheet{padding:24px 32px 0;display:grid;grid-template-columns:240px 1fr 260px;gap:32px;align-items:end;border-bottom:1px solid var(--line)}
+.month{font:600 64px/0.9 "Barlow Condensed";letter-spacing:-.01em}.month small{display:block;font:500 15px "Public Sans";color:var(--ink-3);margin-top:8px;letter-spacing:0}
+.days{display:grid;grid-template-columns:repeat(31,1fr);gap:2px;padding-bottom:18px}
+.d{text-align:center;font:600 18px/1 "Barlow Condensed";padding:8px 0 6px;background:#fff;border:1px solid var(--line)}
+.d i{display:block;font:500 10px "Public Sans";font-style:normal;color:var(--ink-3);margin-top:4px}
+.d.we{background:var(--wk);color:var(--ink-3)}.d.su{color:var(--red)}
+.span{grid-column:14/32;height:6px;background:var(--green);margin-top:6px}
+.spanlbl{grid-column:14/32;font-size:12px;color:var(--ink-2);margin-top:4px}
+.runid{text-align:right;padding-bottom:18px}.runid div{font:600 22px "Barlow Condensed"}.runid p{color:var(--ink-3);font-size:13px}
+.appr{display:inline-flex;gap:6px;margin-top:10px}.appr span{border:1px dashed var(--ink-3);padding:4px 10px;font-size:12px;color:var(--ink-2)}
+.main{display:grid;grid-template-columns:1fr 470px;height:calc(900px - 64px - 164px)}
+.tbl{padding:20px 24px 0 32px;border-right:1px solid var(--line)}
+.totals{display:flex;gap:36px;margin-bottom:16px}.totals div{font-size:12px;color:var(--ink-3)}.totals b{display:block;font:600 22px "Barlow Condensed";color:var(--ink)}
+.totals em{font-style:normal;color:var(--green);font-size:12px;margin-left:4px}
+table{width:100%;border-collapse:collapse}th{text-align:right;font-weight:500;font-size:12px;color:var(--ink-3);padding:8px 10px;border-bottom:1px solid var(--ink)}
+th:first-child,td:first-child{text-align:left}td{padding:10px;border-bottom:1px solid var(--line);text-align:right}
+td small{display:block;color:var(--ink-3);font-size:12px}tr.sel{background:var(--tint)}
+.flag{display:inline-block;border:1.5px solid var(--red);border-radius:999px;padding:0 8px;color:var(--red);font-weight:600}
+.ok{color:var(--green);font-weight:700}
+.detail{padding:20px 32px 0 24px}
+.detail h2{font:600 26px "Barlow Condensed"}.detail .sub{color:var(--ink-3);font-size:13px;margin-bottom:14px}
+.row{display:grid;grid-template-columns:1fr 120px 150px;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.row .v{text-align:right;font-weight:600}.row .m{font-size:12px;color:var(--ink-3)}
+.row.h{font-weight:700;border-bottom:1px solid var(--ink)}.row.h .v{font:700 20px "Barlow Condensed"}
+.cta{margin-top:18px;display:flex;gap:10px}.btn{padding:10px 18px;border:1px solid var(--ink);background:#fff;font:600 14px "Public Sans"}.btn.p{background:var(--green);border-color:var(--green);color:#fff}
+.syn{position:absolute;bottom:10px;right:32px;font-size:11px;color:var(--ink-3)}
+</style></head><body>
+<header class="mast"><span class="brand">Roster</span>
+<nav class="nav"><b>Payroll</b><span>Employees</span><span>Attendance</span><span>Leave</span><span>Rule packs</span><span>Reports</span></nav>
+<span class="co">Company <strong>PT Sinar Laut Logistik</strong> · Indonesia</span></header>
+<section class="sheet">
+<div class="month">October 2026<small>22 working days · no public holidays</small></div>
+<div class="days">
+<div class="d">1<i>Th</i></div><div class="d">2<i>Fr</i></div><div class="d we">3<i>Sa</i></div><div class="d we su">4<i>Su</i></div><div class="d">5<i>Mo</i></div><div class="d">6<i>Tu</i></div><div class="d">7<i>We</i></div><div class="d">8<i>Th</i></div><div class="d">9<i>Fr</i></div><div class="d we">10<i>Sa</i></div><div class="d we su">11<i>Su</i></div><div class="d">12<i>Mo</i></div><div class="d">13<i>Tu</i></div><div class="d">14<i>We</i></div><div class="d">15<i>Th</i></div><div class="d">16<i>Fr</i></div><div class="d we">17<i>Sa</i></div><div class="d we su">18<i>Su</i></div><div class="d">19<i>Mo</i></div><div class="d">20<i>Tu</i></div><div class="d">21<i>We</i></div><div class="d">22<i>Th</i></div><div class="d">23<i>Fr</i></div><div class="d we">24<i>Sa</i></div><div class="d we su">25<i>Su</i></div><div class="d">26<i>Mo</i></div><div class="d">27<i>Tu</i></div><div class="d">28<i>We</i></div><div class="d">29<i>Th</i></div><div class="d">30<i>Fr</i></div><div class="d we">31<i>Sa</i></div>
+<div class="span"></div><div class="spanlbl">Nadia Putri joined 14 Oct: 14 of 22 working days paid</div>
+</div>
+<div class="runid"><div>RUN-2026-10 · Calculated</div><p>38 employees · rule pack ID-2026.2</p><div class="appr"><span>Approval 1 open</span><span>Approval 2 open</span></div></div>
+</section>
+<section class="main">
+<div class="tbl">
+<div class="totals"><div>Gross<b>412,860,000</b></div><div>PPh 21<b>18,904,300</b></div><div>Employee contributions<b>15,212,640</b></div><div>Net pay<b>378,743,060</b></div><div>vs September<b>+2.3%<em>9,480,200</em></b></div></div>
+<table><thead><tr><th>Employee</th><th>Gross</th><th>PPh 21</th><th>Contrib.</th><th>Net</th><th>vs Sep</th><th></th></tr></thead><tbody>
+<tr><td>Ayu Lestari<small>HR Generalist</small></td><td>12,400,000</td><td>372,000</td><td>473,470</td><td>11,554,530</td><td>0.0%</td><td class="ok">✓</td></tr>
+<tr><td>Dimas Pratama<small>Warehouse Staff · 2 days unpaid leave</small></td><td>6,250,000</td><td>62,500</td><td>250,000</td><td>5,937,500</td><td>−4.1%</td><td class="ok">✓</td></tr>
+<tr class="sel"><td>Rizky Hamdani<small>Fleet Supervisor · Q3 bonus</small></td><td>15,900,000</td><td>1,113,000</td><td>543,470</td><td>14,243,530</td><td><span class="flag">+41.2%</span></td><td></td></tr>
+<tr><td>Sari Wulandari<small>Finance Officer</small></td><td>10,800,000</td><td>270,000</td><td>432,000</td><td>10,098,000</td><td>0.0%</td><td></td></tr>
+<tr><td>Bagus Santoso<small>Driver · 14 h overtime</small></td><td>5,600,000</td><td>0</td><td>224,000</td><td>5,376,000</td><td>+6.3%</td><td></td></tr>
+<tr><td>Nadia Putri<small>Customer Service · joined 14 Oct</small></td><td>3,786,360</td><td>0</td><td>151,450</td><td>3,634,910</td><td>new</td><td></td></tr>
+<tr><td>Hendra Wijaya<small>Operations Manager</small></td><td>24,500,000</td><td>2,327,500</td><td>605,470</td><td>21,567,030</td><td>0.0%</td><td></td></tr>
+</tbody></table></div>
+<aside class="detail"><h2>Rizky Hamdani</h2><p class="sub">Fleet Supervisor · K/1 · TER category B</p>
+<div class="row"><span>Base salary</span><span class="v">11,500,000</span><span class="m">22 of 22 days</span></div>
+<div class="row"><span>Fixed allowance</span><span class="v">1,400,000</span><span class="m">recurring</span></div>
+<div class="row"><span>Q3 performance bonus</span><span class="v">3,000,000</span><span class="m">one-off · taxable</span></div>
+<div class="row h"><span>Gross</span><span class="v">15,900,000</span><span class="m"></span></div>
+<div class="row"><span>PPh 21</span><span class="v">−1,113,000</span><span class="m">TER B 7% · ID-2026.2</span></div>
+<div class="row"><span>JHT employee</span><span class="v">−318,000</span><span class="m">2% of 15,900,000</span></div>
+<div class="row"><span>JP employee</span><span class="v">−105,470</span><span class="m">1% of cap 10,547,000</span></div>
+<div class="row"><span>BPJS Kesehatan</span><span class="v">−120,000</span><span class="m">1% of cap 12,000,000</span></div>
+<div class="row h"><span>Net pay</span><span class="v">14,243,530</span><span class="m"></span></div>
+<div class="cta"><button class="btn p">Mark reviewed</button><button class="btn">Ask a question</button></div>
+</aside></section>
+<p class="syn">Synthetic data · rates illustrative, pending verification</p>
+</body></html>

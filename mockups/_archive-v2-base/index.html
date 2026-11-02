@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Roster mockups</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="base.css"><link rel="stylesheet" href="roster.css">
+<style>
+main{max-width:820px;margin:0 auto;padding:48px 16px}
+.brand{padding:0 0 16px}
+h1{font-size:28px}
+.lede{color:var(--text-3);margin:6px 0 24px;max-width:62ch}
+.list{display:grid;gap:8px}
+.list a{display:flex;align-items:center;gap:16px;padding:16px 20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);color:var(--text)}
+.list a:hover{text-decoration:none;border-color:var(--accent)}
+.list b{font-weight:600}.list span{color:var(--text-3);font-size:13px}
+.list .badge{margin-left:auto}
+</style>
+</head>
+<body><main>
+<div class="brand"><span class="mark">R</span>Roster</div>
+<h1>Multi-country HRIS mockups</h1>
+<p class="lede">Payroll driven by dated country rule packs, with attendance, leave, approvals and an employee app. Synthetic demo data.</p>
+<div class="list">
+<a href="dashboard.html"><div><b>HR dashboard</b><br><span>Today's attendance, approvals, payroll status</span></div><span class="badge plain">Desktop</span></a>
+<a href="payroll-run.html"><div><b>Payroll run review</b><br><span>Every number traced to its rule</span></div><span class="badge plain">Desktop</span></a>
+<a href="rule-pack.html"><div><b>Rule pack editor</b><br><span>Change rates as dated, approved versions</span></div><span class="badge plain">Desktop</span></a>
+<a href="clock-in.html"><div><b>Employee app: clock in</b><br><span>One tap at the work location</span></div><span class="badge plain">Phone</span></a>
+</div>
+</main></body>
+</html>

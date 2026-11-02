@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Indonesia rule pack · Roster</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="roster-ds.css">
+<style>
+.ver{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s4);margin-bottom:var(--s6)}
+.vc{background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);padding:var(--s4) var(--s5);text-align:left;display:grid;gap:4px}
+.vc[aria-pressed=true]{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+.vc .top{display:flex;justify-content:space-between;align-items:center}
+.vc b{font-size:16px}
+.vc span.d{font-size:14px;color:var(--text-3)}
+.tl{height:6px;border-radius:999px;background:var(--hover);position:relative;margin-top:6px;overflow:hidden}
+.tl i{position:absolute;top:0;bottom:0;border-radius:999px}
+.work{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:var(--s6);align-items:start}
+.work > *{min-width:0}
+table.t{min-width:720px}
+table.t td .input{width:112px;text-align:right;font-variant-numeric:tabular-nums;height:36px}
+.src{font-size:13px;color:var(--text-3);max-width:240px}
+.src.bad{color:var(--danger);font-weight:600}
+.chg{display:flex;justify-content:space-between;gap:var(--s3);padding:12px 0;border-bottom:1px solid var(--line);font-size:14px}
+.chg b{display:block;color:var(--text)}
+.chg .muted{font-variant-numeric:tabular-nums}
+.ap{list-style:none;padding:0;display:grid;gap:10px;margin:var(--s5) 0;font-size:14px}
+.ap li{display:flex;gap:var(--s2);align-items:center}
+.ap .c{width:22px;height:22px;border-radius:50%;border:2px solid var(--line-strong);display:grid;place-items:center;color:#fff;flex:none}
+.ap .done .c{background:var(--brand);border-color:var(--brand)}
+@media (max-width:1180px){.work{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:760px){.ver{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6" /></symbol><symbol id="i-git-compare" viewBox="0 0 24 24"><circle cx="18" cy="18" r="3" />
+  <circle cx="6" cy="6" r="3" />
+  <path d="M13 6h3a2 2 0 0 1 2 2v7" />
+  <path d="M11 18H8a2 2 0 0 1-2-2V9" /></symbol><symbol id="i-copy" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+  <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></symbol><symbol id="i-lock" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+  <path d="M7 11V7a5 5 0 0 1 10 0v4" /></symbol><symbol id="i-calendar-days" viewBox="0 0 24 24"><path d="M8 2v4" />
+  <path d="M16 2v4" />
+  <rect width="18" height="18" x="3" y="4" rx="2" />
+  <path d="M3 10h18" />
+  <path d="M8 14h.01" />
+  <path d="M12 14h.01" />
+  <path d="M16 14h.01" />
+  <path d="M8 18h.01" />
+  <path d="M12 18h.01" />
+  <path d="M16 18h.01" /></symbol><symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" /></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></symbol><symbol id="i-triangle-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" />
+  <path d="M12 9v4" />
+  <path d="M12 17h.01" /></symbol><symbol id="i-send" viewBox="0 0 24 24"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z" />
+  <path d="m21.854 2.147-10.94 10.939" /></symbol><symbol id="i-house" viewBox="0 0 24 24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
+  <path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></symbol><symbol id="i-inbox" viewBox="0 0 24 24"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12" />
+  <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" /></symbol><symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+  <circle cx="9" cy="7" r="4" />
+  <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+  <path d="M16 3.13a4 4 0 0 1 0 7.75" /></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" />
+  <polyline points="12 6 12 12 16 14" /></symbol><symbol id="i-wallet" viewBox="0 0 24 24"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1" />
+  <path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4" /></symbol><symbol id="i-briefcase" viewBox="0 0 24 24"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+  <rect width="20" height="14" x="2" y="6" rx="2" /></symbol><symbol id="i-building-2" viewBox="0 0 24 24"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z" />
+  <path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" />
+  <path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2" />
+  <path d="M10 6h4" />
+  <path d="M10 10h4" />
+  <path d="M10 14h4" />
+  <path d="M10 18h4" /></symbol><symbol id="i-chart-column" viewBox="0 0 24 24"><path d="M3 3v16a2 2 0 0 0 2 2h16" />
+  <path d="M18 17V9" />
+  <path d="M13 17V5" />
+  <path d="M8 17v-3" /></symbol><symbol id="i-chevrons-up-down" viewBox="0 0 24 24"><path d="m7 15 5 5 5-5" />
+  <path d="m7 9 5-5 5 5" /></symbol><symbol id="i-settings" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+  <circle cx="12" cy="12" r="3" /></symbol><symbol id="i-panel-left-close" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2" />
+  <path d="M9 3v18" />
+  <path d="m16 15-3-3 3-3" /></symbol><symbol id="i-menu" viewBox="0 0 24 24"><line x1="4" x2="20" y1="12" y2="12" />
+  <line x1="4" x2="20" y1="6" y2="6" />
+  <line x1="4" x2="20" y1="18" y2="18" /></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" />
+  <path d="m21 21-4.3-4.3" /></symbol><symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+  <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" /></symbol><symbol id="i-circle-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" />
+  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+  <path d="M12 17h.01" /></symbol></svg>
+<div class="app">
+<aside class="side" aria-label="Workspace">
+<a class="logo" href="index.html"><span class="mk"><svg class="icon sm" aria-hidden="true"><use href="#i-users"/></svg></span><span class="txt">Roster</span></a>
+<button class="coswitch" aria-label="Switch company: PT Sinar Laut Logistik"><span class="flag">SL</span><span><b>PT Sinar Laut Logistik</b><span>Indonesia · 38 people</span></span><svg class="icon sm" aria-hidden="true"><use href="#i-chevrons-up-down"/></svg></button>
+<nav class="snav" aria-label="Main"><a class="it" href="dashboard.html" title="Home"><svg class="icon sm" aria-hidden="true"><use href="#i-house"/></svg><span class="lbl">Home</span></a><a class="it" href="dashboard.html#ap" title="Inbox"><svg class="icon sm" aria-hidden="true"><use href="#i-inbox"/></svg><span class="lbl">Inbox</span><span class="ct">7</span></a><div class="divider"></div><a class="grp" href="employee.html" aria-expanded="false" title="People"><svg class="icon sm" aria-hidden="true"><use href="#i-users"/></svg><span class="lbl">People</span><svg class="icon xs chev" aria-hidden="true"><use href="#i-chevron-right"/></svg></a><a class="grp" href="#" aria-expanded="false" title="Time"><svg class="icon sm" aria-hidden="true"><use href="#i-clock"/></svg><span class="lbl">Time</span><svg class="icon xs chev" aria-hidden="true"><use href="#i-chevron-right"/></svg></a><a class="grp open" href="payroll-run.html" aria-expanded="true" title="Pay"><svg class="icon sm" aria-hidden="true"><use href="#i-wallet"/></svg><span class="lbl">Pay</span><svg class="icon xs chev" aria-hidden="true"><use href="#i-chevron-down"/></svg></a><div class="subs"><a href="payroll-run.html">Payroll</a><a href="#">Claims<span class=ct>3</span></a><a href="rule-pack.html" aria-current=page>Rule packs</a><a href="#">Loans & benefits<span class=soon>Soon</span></a><a href="#">Tax filings<span class=soon>Soon</span></a></div><a class="grp dim" href="#" aria-expanded="false" title="Talent"><svg class="icon sm" aria-hidden="true"><use href="#i-briefcase"/></svg><span class="lbl">Talent</span><span class="soon">Soon</span></a><a class="grp dim" href="#" aria-expanded="false" title="Workplace"><svg class="icon sm" aria-hidden="true"><use href="#i-building-2"/></svg><span class="lbl">Workplace</span><span class="soon">Soon</span></a><a class="grp" href="#" aria-expanded="false" title="Insights"><svg class="icon sm" aria-hidden="true"><use href="#i-chart-column"/></svg><span class="lbl">Insights</span><svg class="icon xs chev" aria-hidden="true"><use href="#i-chevron-right"/></svg></a></nav>
+<div class="foot">
+<a class="collapse" href="#" title="Settings"><svg class="icon sm" aria-hidden="true"><use href="#i-settings"/></svg><span class="lbl">Settings</span></a>
+<button class="collapse" title="Collapse sidebar"><svg class="icon sm" aria-hidden="true"><use href="#i-panel-left-close"/></svg><span class="lbl">Collapse sidebar</span></button>
+<div class="me"><span class="av sm av-7" aria-hidden="true">AL</span><div><b>Ayu Lestari</b><span>HR Admin</span></div></div>
+</div></aside>
+<div class="mainc">
+<header class="topbar"><button class="ibtn menu-btn" aria-label="Open menu"><svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg></button>
+<button class="cmdk" aria-label="Search"><svg class="icon sm" aria-hidden="true"><use href="#i-search"/></svg><span>Search people, requests, payslips…</span><kbd>⌘K</kbd></button>
+<div class="tb-r"><button class="ibtn" aria-label="Notifications, 3 unread"><svg class="icon" aria-hidden="true"><use href="#i-bell"/></svg><span class="dot">3</span></button><button class="ibtn" aria-label="Help"><svg class="icon" aria-hidden="true"><use href="#i-circle-help"/></svg></button></div></header>
+
+<main class="page">
+<nav class="crumbs" aria-label="Breadcrumb"><a href="#">Payroll</a><svg class="icon xs" aria-hidden="true"><use href="#i-chevron-right"/></svg><a href="#">Rule packs</a><svg class="icon xs" aria-hidden="true"><use href="#i-chevron-right"/></svg><span>Indonesia</span></nav>
+<div class="phead"><div><h1>Indonesia rule pack</h1><p>Tax, BPJS, THR, overtime and leave rules for companies in Indonesia. Every change is a new dated version; past payroll keeps the version it used.</p></div>
+<div class="acts"><button class="btn"><svg class="icon sm" aria-hidden="true"><use href="#i-git-compare"/></svg>Compare versions</button><button class="btn"><svg class="icon sm" aria-hidden="true"><use href="#i-copy"/></svg>Duplicate for a new country</button></div></div>
+<nav class="modtabs" aria-label="Pay"><a href="payroll-run.html">Payroll runs</a><a href="#">Claims</a><a href="rule-pack.html" aria-current="page">Rule packs</a><a href="#">Loans <span class="soon">Soon</span></a><a href="#">Benefits <span class="soon">Soon</span></a><a href="#">Tax filings <span class="soon">Soon</span></a></nav>
+<section class="ver" role="group" aria-label="Versions">
+<button class="vc" aria-pressed="false"><span class="top"><b>ID-2026.1</b><span class="badge">Superseded</span></span><span class="d">1 Jan – 31 Mar 2026 · 3 runs</span><span class="tl"><i style="left:0;width:25%;background:var(--line-strong)"></i></span></button>
+<button class="vc" aria-pressed="false"><span class="top"><b>ID-2026.2</b><span class="badge success">Active</span></span><span class="d">From 1 Apr 2026 · 7 runs</span><span class="tl"><i style="left:25%;width:67%;background:var(--brand)"></i></span></button>
+<button class="vc" aria-pressed="true"><span class="top"><b>ID-2026.3</b><span class="badge warning">Draft</span></span><span class="d">Starts 1 Dec 2026 · needs approval</span><span class="tl"><i style="left:92%;width:8%;background:#E0A43B"></i></span></button>
+</section>
+<div class="work">
+<section class="card" aria-labelledby="sec">
+<nav class="subtabs" style="padding:0 var(--s6)" aria-label="Sections"><a href="#">Income tax</a><a href="#">PTKP</a><a href="#" aria-current="page">BPJS <span class="ct">2 changes</span></a><a href="#">THR</a><a href="#">Overtime</a><a href="#">Leave</a><a href="#">Holidays</a></nav>
+<div class="card-b" style="padding-top:var(--s5)"><div class="note"><svg class="icon sm" aria-hidden="true"><use href="#i-lock"/></svg><span><b>The method stays fixed in code:</b> monthly TER January–November, yearly recalculation in December. Only the numbers below can change.</span></div></div>
+<div class="tablewrap"><table class="t"><thead><tr><th id="sec">Programme</th><th>Employer %</th><th>Employee %</th><th>Wage cap (Rp)</th><th>Source</th></tr></thead><tbody>
+<tr><td><b style="font-weight:600">JHT</b><br><span class="small muted">Old-age savings</span></td><td><input class="input " value="3.70" aria-label="JHT employer"></td><td><input class="input " value="2.00" aria-label="JHT employee"></td><td><input class="input " value="No cap" aria-label="JHT wage cap"></td><td class="src">BPJS Ketenagakerjaan · checked 31 Oct 2026</td></tr>
+<tr><td><b style="font-weight:600">JP</b><br><span class="small muted">Pension</span></td><td><input class="input " value="2.00" aria-label="JP employer"></td><td><input class="input " value="1.00" aria-label="JP employee"></td><td><input class="input changed" value="10,547,000" aria-label="JP wage cap"></td><td class="src bad">Sources disagree: 10,547,000 vs 10,547,400. Attach the regulation.</td></tr>
+<tr><td><b style="font-weight:600">JKK</b><br><span class="small muted">Work accident · risk class II</span></td><td><input class="input " value="0.54" aria-label="JKK employer"></td><td><input class="input " value="—" aria-label="JKK employee"></td><td><input class="input " value="No cap" aria-label="JKK wage cap"></td><td class="src">Risk classes 0.24–1.74% · checked 31 Oct 2026</td></tr>
+<tr><td><b style="font-weight:600">JKM</b><br><span class="small muted">Death benefit</span></td><td><input class="input " value="0.30" aria-label="JKM employer"></td><td><input class="input " value="—" aria-label="JKM employee"></td><td><input class="input " value="No cap" aria-label="JKM wage cap"></td><td class="src">BPJS Ketenagakerjaan · checked 31 Oct 2026</td></tr>
+<tr><td><b style="font-weight:600">Kesehatan</b><br><span class="small muted">Health insurance</span></td><td><input class="input " value="4.00" aria-label="Kesehatan employer"></td><td><input class="input invalid" value="1,5" aria-label="Kesehatan employee"><p class="err">Use a dot: 1.50</p></td><td><input class="input " value="12,000,000" aria-label="Kesehatan wage cap"></td><td class="src bad">Single unofficial source. Verify first.</td></tr>
+</tbody></table></div>
+</section>
+<aside class="card" aria-labelledby="dr"><div class="card-h"><h2 id="dr">Draft ID-2026.3</h2><div class="acts"><span class="badge warning">Draft</span></div></div><div class="card-b">
+<div class="field"><label id="effl">Takes effect from</label><button class="trigger" aria-haspopup="dialog" aria-expanded="false" aria-labelledby="effl effv"><svg class="icon sm" aria-hidden="true"><use href="#i-calendar-days"/></svg><span class="val" id="effv">Tue, 1 December 2026</span><svg class="icon xs" aria-hidden="true"><use href="#i-chevron-down"/></svg></button><span class="hint">November payroll keeps ID-2026.2. <a href="components.html#date">Picker preview</a></span></div>
+<div style="margin-top:var(--s4)">
+<div class="chg"><span><b>JP wage cap</b><span class="muted">10,042,300 → 10,547,000</span></span><span class="badge">+5.0%</span></div>
+<div class="chg"><span><b>Kesehatan employee rate</b><span class="muted">1.00 → 1,5</span></span><span class="badge danger">Invalid</span></div>
+<div class="chg" style="border-bottom:0"><span><b>Effect on December payroll</b><span class="muted">PT Sinar Laut Logistik</span></span><b class="num">+Rp 412,600</b></div></div>
+<ol class="ap" aria-label="Approval"><li class="done"><span class="c"><svg class="icon xs" aria-hidden="true"><use href="#i-check"/></svg></span>Drafted by Hendra Wijaya, 31 Oct</li><li><span class="c"></span>Second approver: any HR Admin except the author</li><li><span class="c"></span>Active on 1 Dec 2026</li></ol>
+<div class="note danger"><svg class="icon sm" aria-hidden="true"><use href="#i-triangle-alert"/></svg><span><b>Fix 2 things before sending:</b> one invalid value and two numbers without a verified source.</span></div>
+<div style="display:flex;gap:var(--s2);margin-top:var(--s4)"><button class="btn primary" disabled style="flex:1"><svg class="icon sm" aria-hidden="true"><use href="#i-send"/></svg>Send for approval</button><button class="btn ghost">Discard</button></div>
+</div></aside></div>
+<p class="synthetic">Synthetic demo. Rates are illustrative and must be verified against official regulations.</p>
+</main>
+</div></div>
+</body>
+</html>

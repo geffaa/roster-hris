@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0E5A4F">
+<title>Clock in · Roster</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="roster.css">
+<style>
+body{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;background:var(--n1)}
+.top{background:var(--green);color:#fff;padding:14px var(--s4) var(--s4)}
+.top .row{display:flex;justify-content:space-between;align-items:center}
+.top .brand{font:700 24px/1 var(--display)}
+.top .who{width:32px;height:32px}
+.date{margin-top:var(--s4);display:flex;align-items:flex-end;gap:var(--s3)}
+.date b{font:700 72px/.8 var(--display)}
+.date span{font-size:14px;color:var(--green-on);line-height:1.3}
+.date span strong{display:block;color:#fff;font-weight:600;font-size:16px}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-top:var(--s4)}
+.week div{background:var(--green-deep);text-align:center;padding:6px 0;font:600 15px/1 var(--display);color:#fff;border:1px solid #2B7468}
+.week div i{display:block;font:500 11px var(--text);font-style:normal;color:var(--green-on);margin-top:3px}
+.week div.done{background:#fff;color:var(--green);border-color:#fff}.week div.done i{color:var(--green)}
+.week div.today{outline:2px solid #fff;outline-offset:-2px;background:var(--green)}
+.week div.off{background:transparent;color:var(--green-on)}
+
+main{flex:1;padding:var(--s5) var(--s4);display:flex;flex-direction:column;gap:var(--s4)}
+.clock{font:600 56px/1 var(--display);letter-spacing:-.01em}
+.clock small{display:block;font:500 13px var(--text);color:var(--n5);letter-spacing:0;margin-top:var(--s1)}
+.facts{display:grid;gap:0;border-top:1px solid var(--n3)}
+.fact{display:flex;justify-content:space-between;gap:var(--s3);padding:var(--s3) 0;border-bottom:1px solid var(--n3);font-size:14px}
+.fact span:first-child{color:var(--n5)}
+.fact b{font-weight:600;text-align:right}
+.loc{display:flex;gap:var(--s2);align-items:center;color:var(--green);font-weight:600}
+.loc.out{color:var(--red)}
+.hit{margin-top:auto;display:grid;gap:var(--s2)}
+.big{width:100%;min-height:64px;border:0;background:var(--green);color:#fff;font:700 22px var(--display);letter-spacing:.02em;display:flex;align-items:center;justify-content:center;gap:var(--s2)}
+.big:active{background:var(--green-deep)}
+.big .icon{width:22px;height:22px}
+.links{display:flex;justify-content:space-between}
+.tabbar{position:sticky;bottom:0;display:grid;grid-template-columns:repeat(4,1fr);background:var(--n0);border-top:1px solid var(--n3);padding-bottom:env(safe-area-inset-bottom)}
+.tabbar a{display:grid;justify-items:center;gap:2px;padding:10px 0;font-size:11px;color:var(--n5);text-decoration:none}
+.tabbar a[aria-current]{color:var(--green);font-weight:600}
+.tabbar .icon{width:20px;height:20px}
+
+.states{padding:var(--s4);border-top:1px dashed var(--n3);display:grid;gap:var(--s3)}
+.states h2{font:600 18px var(--display);color:var(--n6)}
+.state{border:1px solid var(--n3);background:var(--n0);padding:var(--s3);font-size:13px;display:grid;gap:var(--s2)}
+.state b{font-weight:600}
+.state .big{min-height:48px;font-size:18px}
+.state .big[disabled]{background:var(--n2);color:var(--n5)}
+.state.late{border-color:#E8CF9A;background:var(--amber-tint)}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11.5a7 7 0 0 0-14 0C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></symbol>
+  <symbol id="i-login" viewBox="0 0 24 24"><path d="M14 4h5v16h-5M4 12h11M11 8l4 4-4 4"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15"/><path d="M4 10h16M9 3v4M15 3v4"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M9 12h7M9 16h7"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></symbol>
+  <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M3 3l18 18M8.5 16.5a5 5 0 0 1 7 0M5 12.5a10 10 0 0 1 4-2.3M14.5 10.3A10 10 0 0 1 19 12.5"/></symbol>
+</svg>
+
+<header class="top">
+  <div class="row"><a class="brand" href="index.html">Roster</a><span class="who" aria-label="Dimas Pratama">DP</span></div>
+  <div class="date"><b>2</b><span><strong>Monday</strong>November 2026</span></div>
+  <div class="week" aria-label="This week">
+    <div class="today">2<i>Mo</i></div><div>3<i>Tu</i></div><div>4<i>We</i></div><div>5<i>Th</i></div><div>6<i>Fr</i></div><div class="off">7<i>Sa</i></div><div class="off">8<i>Su</i></div>
+  </div>
+</header>
+
+<main>
+  <div class="clock" aria-live="polite">08:52<small>Server time · WIB (UTC+7)</small></div>
+  <div class="facts">
+    <div class="fact"><span>Shift</span><b>Warehouse day · 09:00–17:00</b></div>
+    <div class="fact"><span>On time until</span><b>09:10</b></div>
+    <div class="fact"><span>Location</span><b class="loc"><svg class="icon"><use href="#i-pin"/></svg>Cikarang Warehouse · 34 m away</b></div>
+    <div class="fact"><span>Last week</span><b>5 of 5 days · 1 late (7 min)</b></div>
+  </div>
+  <div class="hit">
+    <button class="big"><svg class="icon"><use href="#i-login"/></svg>Clock in</button>
+    <div class="links"><a href="#">Request a correction</a><a href="#">History</a></div>
+  </div>
+</main>
+
+<section class="states" aria-labelledby="st">
+  <h2 id="st">Other states</h2>
+  <div class="state"><b class="loc out"><svg class="icon"><use href="#i-pin"/></svg>1.2 km from Cikarang Warehouse</b>Clock-in opens within 150 m of your work location.<button class="big" disabled>Clock in</button></div>
+  <div class="state late"><b>Clocked in at 09:17</b>7 minutes after your on-time window. Your manager, Putu Ardana, can see this.</div>
+  <div class="state"><b style="display:flex;gap:8px;align-items:center"><svg class="icon"><use href="#i-wifi"/></svg>No connection</b>Nothing was recorded. Try again when you are back online; the time will be taken from the server then.</div>
+  <div class="state"><b>Location access is off</b>Roster needs your location only at the moment you clock in. <a href="#">How to turn it on</a></div>
+  <div class="state"><b>Clocked out at 17:04</b>8 h 12 min today. See you tomorrow.</div>
+  <p class="synthetic">Synthetic demo data.</p>
+</section>
+
+<nav class="tabbar" aria-label="App">
+  <a href="#" aria-current="page"><svg class="icon"><use href="#i-home"/></svg>Today</a>
+  <a href="#"><svg class="icon"><use href="#i-cal"/></svg>Leave</a>
+  <a href="#"><svg class="icon"><use href="#i-doc"/></svg>Payslips</a>
+  <a href="#"><svg class="icon"><use href="#i-user"/></svg>Me</a>
+</nav>
+</body>
+</html>

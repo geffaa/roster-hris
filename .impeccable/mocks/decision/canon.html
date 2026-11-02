@@ -1,0 +1,33 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Roster: Category standard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0F172A;--ink-3:#64748B;--line:#E2E8F0;--bg:#F8FAFC;--blue:#3B5BDB;--blue-50:#EEF2FF}
+*{box-sizing:border-box;margin:0}
+body{width:1440px;height:900px;overflow:hidden;background:var(--bg);color:var(--ink);font:14px/1.45 Inter,sans-serif;font-variant-numeric:tabular-nums;display:grid;grid-template-columns:232px 1fr}
+.side{background:#fff;border-right:1px solid var(--line);padding:20px 14px}.side b{display:block;font-size:18px;padding:0 10px 18px}
+.side a{display:block;padding:8px 10px;border-radius:6px;color:var(--ink-3)}.side a.on{background:var(--blue-50);color:var(--blue);font-weight:600}
+.main{padding:24px 32px}.hd{display:flex;align-items:center;gap:12px}.hd h1{font-size:22px}.pill{background:#FEF3C7;color:#92400E;font-size:12px;padding:2px 10px;border-radius:999px;font-weight:600}
+.hd .r{margin-left:auto;display:flex;gap:8px}.btn{padding:8px 14px;border-radius:6px;border:1px solid var(--line);background:#fff;font:600 14px Inter}.btn.p{background:var(--blue);border-color:var(--blue);color:#fff}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:20px 0}.c{background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 16px}.c label{color:var(--ink-3);font-size:12px}.c div{font-size:22px;font-weight:600;margin-top:4px}
+.grid{display:grid;grid-template-columns:1fr 380px;gap:16px}
+.t{background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden}table{width:100%;border-collapse:collapse}
+th{background:var(--bg);font-size:12px;color:var(--ink-3);font-weight:500;text-align:right;padding:10px 12px}th:first-child,td:first-child{text-align:left}
+td{padding:11px 12px;border-top:1px solid var(--line);text-align:right}td small{display:block;color:var(--ink-3);font-size:12px}
+tr.sel td{background:var(--blue-50)}.up{color:#B45309;font-weight:600}
+.d{background:#fff;border:1px solid var(--line);border-radius:8px;padding:16px}.d h3{font-size:16px}.d p{color:var(--ink-3);font-size:13px;margin-bottom:10px}
+.ln{display:flex;justify-content:space-between;padding:7px 0;border-top:1px solid var(--line)}.ln.t2{font-weight:700}
+</style></head><body>
+<aside class="side"><b>Roster</b><a>Dashboard</a><a>Employees</a><a>Attendance</a><a>Leave</a><a class="on">Payroll</a><a>Rule packs</a><a>Reports</a><a>Settings</a></aside>
+<main class="main"><div class="hd"><h1>October 2026 payroll</h1><span class="pill">Awaiting approval</span><div class="r"><button class="btn">Export</button><button class="btn p">Approve</button></div></div>
+<div class="cards"><div class="c"><label>Gross</label><div>Rp412,860,000</div></div><div class="c"><label>PPh 21</label><div>Rp18,904,300</div></div><div class="c"><label>Net pay</label><div>Rp378,743,060</div></div><div class="c"><label>Employees</label><div>38</div></div></div>
+<div class="grid"><div class="t"><table><thead><tr><th>Employee</th><th>Gross</th><th>PPh 21</th><th>Net</th><th>Change</th></tr></thead><tbody>
+<tr><td>Ayu Lestari<small>HR Generalist</small></td><td>12,400,000</td><td>372,000</td><td>11,554,530</td><td>0.0%</td></tr>
+<tr><td>Dimas Pratama<small>Warehouse Staff</small></td><td>6,250,000</td><td>62,500</td><td>5,937,500</td><td>−4.1%</td></tr>
+<tr class="sel"><td>Rizky Hamdani<small>Fleet Supervisor</small></td><td>15,900,000</td><td>1,113,000</td><td>14,243,530</td><td class="up">+41.2%</td></tr>
+<tr><td>Sari Wulandari<small>Finance Officer</small></td><td>10,800,000</td><td>270,000</td><td>10,098,000</td><td>0.0%</td></tr>
+<tr><td>Bagus Santoso<small>Driver</small></td><td>5,600,000</td><td>0</td><td>5,376,000</td><td>+6.3%</td></tr>
+<tr><td>Nadia Putri<small>Customer Service</small></td><td>3,786,360</td><td>0</td><td>3,634,910</td><td>New</td></tr>
+<tr><td>Hendra Wijaya<small>Operations Manager</small></td><td>24,500,000</td><td>2,327,500</td><td>21,567,030</td><td>0.0%</td></tr>
+</tbody></table></div>
+<div class="d"><h3>Rizky Hamdani</h3><p>K/1 · TER B</p><div class="ln"><span>Base salary</span><span>11,500,000</span></div><div class="ln"><span>Allowance</span><span>1,400,000</span></div><div class="ln"><span>Q3 bonus</span><span>3,000,000</span></div><div class="ln"><span>PPh 21</span><span>−1,113,000</span></div><div class="ln"><span>BPJS (employee)</span><span>−543,470</span></div><div class="ln t2"><span>Net pay</span><span>14,243,530</span></div></div></div>
+</main></body></html>

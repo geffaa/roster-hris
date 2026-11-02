@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FFFFFF">
+<title>Today · Roster</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="base.css"><link rel="stylesheet" href="roster.css">
+<style>
+body{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;background:var(--bg)}
+.apphead{background:var(--surface);border-bottom:1px solid var(--border);padding:14px var(--s4);display:flex;align-items:center;gap:var(--s3)}
+.apphead .brand{padding:0;font-size:16px}
+.apphead .avatar{margin-left:auto}
+main{flex:1;padding:var(--s5) var(--s4) var(--s6);display:grid;gap:var(--s4);align-content:start}
+.hello h1{font-size:20px}.hello p{color:var(--text-3)}
+.clockcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--s5);display:grid;gap:var(--s4)}
+.time{font-size:44px;font-weight:600;letter-spacing:-.02em;line-height:1;font-variant-numeric:tabular-nums}
+.time small{display:block;font-size:13px;font-weight:400;color:var(--text-3);letter-spacing:0;margin-top:6px}
+.loc{display:flex;align-items:center;gap:var(--s2);padding:10px 12px;border-radius:var(--r);background:var(--success-soft);color:var(--success);font-size:14px;font-weight:500}
+.big{width:100%;height:56px;border:0;border-radius:var(--r);background:var(--accent);color:#fff;font-size:17px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:var(--s2)}
+.big:active{background:var(--accent-strong)}
+.big[disabled]{background:var(--hover);color:var(--text-4)}
+.links{display:flex;justify-content:space-between;font-size:14px}
+.week{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg)}
+.week h2{font-size:15px;padding:var(--s4) var(--s4) var(--s2)}
+.day{display:flex;align-items:center;gap:var(--s3);padding:10px var(--s4);border-top:1px solid var(--border);font-size:14px}
+.day .d{width:44px;color:var(--text-3)}
+.day .t{font-variant-numeric:tabular-nums}
+.day .badge{margin-left:auto}
+.states{display:grid;gap:var(--s3)}
+.states h2{font-size:15px;color:var(--text-2);margin-top:var(--s2)}
+.st{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:var(--s3) var(--s4);font-size:14px;display:grid;gap:var(--s2)}
+.st b{font-weight:600}
+.st .big{height:44px;font-size:15px}
+.tabbar{position:sticky;bottom:0;display:grid;grid-template-columns:repeat(5,1fr);background:var(--surface);border-top:1px solid var(--border);padding-bottom:env(safe-area-inset-bottom)}
+.tabbar a{display:grid;justify-items:center;gap:2px;padding:9px 0;font-size:11px;color:var(--text-3);font-weight:500}
+.tabbar a:hover{text-decoration:none}
+.tabbar a[aria-current]{color:var(--accent-strong)}
+.tabbar .icon{width:22px;height:22px}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11.5a7 7 0 0 0-14 0C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></symbol>
+<symbol id="i-login" viewBox="0 0 24 24"><path d="M14 4h5v16h-5M4 12h11M11 8l4 4-4 4"/></symbol>
+<symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z"/></symbol>
+<symbol id="i-cal" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></symbol>
+<symbol id="i-receipt" viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></symbol>
+<symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M9 12h7M9 16h7"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></symbol>
+<symbol id="i-wifi" viewBox="0 0 24 24"><path d="M3 3l18 18M8.5 16.5a5 5 0 0 1 7 0M5 12.5a10 10 0 0 1 4-2.3M14.5 10.3A10 10 0 0 1 19 12.5"/></symbol>
+</svg>
+<header class="apphead"><div class="brand"><span class="mark">R</span>Roster</div><span class="avatar" aria-label="Dimas Pratama">DP</span></header>
+<main>
+  <div class="hello"><h1>Morning, Dimas</h1><p>Monday, 2 November · Warehouse day shift 09:00–17:00</p></div>
+  <section class="clockcard" aria-label="Clock in">
+    <div class="time" aria-live="polite">08:52<small>Server time, WIB. On time until 09:10.</small></div>
+    <div class="loc"><svg class="icon"><use href="#i-pin"/></svg>At Cikarang Warehouse · 34 m away</div>
+    <button class="big"><svg class="icon"><use href="#i-login"/></svg>Clock in</button>
+    <div class="links"><a href="#">Request a correction</a><a href="#">History</a></div>
+  </section>
+  <section class="week" aria-labelledby="wk"><h2 id="wk">Last week</h2>
+    <div class="day"><span class="d">Mon</span><span class="t">08:47 – 17:05</span><span class="badge success">On time</span></div>
+    <div class="day"><span class="d">Tue</span><span class="t">09:17 – 17:20</span><span class="badge warning">7 min late</span></div>
+    <div class="day"><span class="d">Wed</span><span class="t">08:55 – 17:01</span><span class="badge success">On time</span></div>
+    <div class="day"><span class="d">Thu</span><span class="t">08:50 – 20:30</span><span class="badge info">3 h 30 overtime</span></div>
+    <div class="day"><span class="d">Fri</span><span class="t">08:58 – 17:02</span><span class="badge success">On time</span></div>
+  </section>
+  <section class="states" aria-labelledby="st"><h2 id="st">Other states</h2>
+    <div class="st"><b>1.2 km from Cikarang Warehouse</b><span class="muted">Clock-in opens within 150 m of your work location.</span><button class="big" disabled>Clock in</button></div>
+    <div class="st"><b style="display:flex;gap:8px;align-items:center"><svg class="icon"><use href="#i-wifi"/></svg>No connection</b><span class="muted">Nothing was recorded. Try again when you are online; the time is taken from the server.</span></div>
+    <div class="st"><b>Location access is off</b><span class="muted">Roster uses your location only at the moment you clock in. <a href="#">How to turn it on</a></span></div>
+    <div class="st"><b>Clocked out at 17:04</b><span class="muted">8 h 12 min today. See you tomorrow.</span></div>
+    <p class="synthetic">Synthetic demo data.</p>
+  </section>
+</main>
+<nav class="tabbar" aria-label="App">
+  <a href="#" aria-current="page"><svg class="icon"><use href="#i-home"/></svg>Today</a>
+  <a href="#"><svg class="icon"><use href="#i-cal"/></svg>Leave</a>
+  <a href="#"><svg class="icon"><use href="#i-receipt"/></svg>Claims</a>
+  <a href="#"><svg class="icon"><use href="#i-doc"/></svg>Payslips</a>
+  <a href="#"><svg class="icon"><use href="#i-user"/></svg>Me</a>
+</nav>
+</body>
+</html>
