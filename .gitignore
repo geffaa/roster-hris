@@ -24,3 +24,6 @@ yarn-error.log
 
 # Local review screenshots
 /.impeccable/review/
+
+/test-results/
+/playwright-report/

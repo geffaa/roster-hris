@@ -883,3 +883,15 @@ a.acard:hover{text-decoration:none;border-color:var(--line-strong)}
 .installbar img{width:40px;height:40px;border-radius:10px;flex:none}
 .installbar > span{flex:1;min-width:0}.installbar b{display:block;font-size:14px}.installbar small{display:block;font-size:13px;color:var(--text-3)}
 .pushrow{display:flex;align-items:center;gap:var(--s3)}
+/* command palette */
+.pal-scrim{position:fixed;inset:0;z-index:80;background:rgba(19,32,30,.32);display:flex;justify-content:center;align-items:flex-start;padding:12vh var(--s4) var(--s4)}
+.pal{width:min(560px,100%);background:#fff;border-radius:var(--r-lg);box-shadow:var(--pop);overflow:hidden}
+.pal-in{display:flex;align-items:center;gap:var(--s3);padding:0 var(--s4);border-bottom:1px solid var(--line);color:var(--text-3)}
+.pal-in input{flex:1;height:52px;border:0;outline:0;font:inherit;font-size:16px;color:var(--text);background:none}
+.pal-in kbd{font:600 12px var(--font);border:1px solid var(--line);border-radius:4px;padding:0 6px}
+.pal-list{list-style:none;margin:0;padding:var(--s2);max-height:min(60vh,420px);overflow:auto}
+.pal-list li[role=option]{display:flex;align-items:center;gap:var(--s3);padding:var(--s2) var(--s3);border-radius:var(--r);cursor:pointer}
+.pal-list li[aria-selected=true]{background:var(--brand-tint)}
+.pal-ic{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;background:var(--surface-2);color:var(--text-2);flex:none}
+.pal-t{flex:1;min-width:0}.pal-t b{display:block;font-weight:600}.pal-t small{display:block;font-size:13px;color:var(--text-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pal-empty{padding:var(--s4);color:var(--text-3);font-size:14px}

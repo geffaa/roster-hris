@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Avatar from '@/components/roster/Avatar.vue';
+import CommandPalette from '@/components/roster/CommandPalette.vue';
 import NotificationBell from '@/components/roster/NotificationBell.vue';
 import FlashToast from '@/components/roster/FlashToast.vue';
 import { useRoster } from '@/composables/useRoster';
@@ -84,6 +85,11 @@ const groups = computed<Group[]>(() => [
     { name: 'Insights', icon: ChartColumn, subs: [...(seesDirectory.value ? [{ name: 'Reports', href: route('reports') }] : []), ...(can('audit.view') ? [{ name: 'Audit log', href: route('audit-log') }] : [])] },
 ]);
 
+const paletteGroups = computed(() => [
+    { name: 'Home', href: route('dashboard'), group: 'Roster' },
+    { name: 'Inbox', href: route('inbox'), group: 'Roster' },
+    ...groups.value.flatMap((g) => g.subs.filter((s) => 'href' in s && s.href).map((s) => ({ name: s.name, href: (s as { href: string }).href, group: g.name }))),
+]);
 const currentGroup = computed(() => groups.value.find((g) => g.subs.some((s) => s.name === props.current))?.name ?? null);
 const expanded = ref<string | null>(currentGroup.value);
 const mobileOpen = ref(false);
@@ -189,9 +195,7 @@ const flagOf = (name: string) =>
         <div class="mainc">
             <header class="topbar">
                 <button class="ibtn menu-btn" type="button" aria-label="Open menu" @click="mobileOpen = true"><Menu class="icon" /></button>
-                <button class="cmdk" type="button" aria-label="Search (coming in M4)" disabled>
-                    <Search class="icon sm" /><span>Search people, requests, payslips…</span><kbd>⌘K</kbd>
-                </button>
+                <CommandPalette :pages="paletteGroups" />
                 <div class="tb-r">
                     <NotificationBell />
                     <button class="ibtn" type="button" aria-label="Help"><CircleHelp class="icon" /></button>

@@ -20,6 +20,7 @@ use App\Http\Controllers\People\EmployeeImportController;
 use App\Http\Controllers\People\IdentifierRevealController;
 use App\Http\Controllers\People\OrgChartController;
 use App\Http\Controllers\PushSubscriptionController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Settings\TimeSettingsController;
 use App\Http\Controllers\Time\InboxController;
 use App\Http\Controllers\Time\LeaveCalendarController;
@@ -68,6 +69,7 @@ Route::middleware(['auth', 'company'])->group(function () {
 
         // Managers and HR
         Route::get('inbox', [InboxController::class, 'index'])->name('inbox');
+        Route::get('search', SearchController::class)->middleware('throttle:60,1')->name('search');
         Route::get('notifications/{id}', [NotificationController::class, 'open'])->whereUuid('id')->name('notifications.open');
         Route::post('push-subscriptions', [PushSubscriptionController::class, 'store'])->middleware('throttle:10,1')->name('push.store');
         Route::delete('push-subscriptions', [PushSubscriptionController::class, 'destroy'])->name('push.destroy');
