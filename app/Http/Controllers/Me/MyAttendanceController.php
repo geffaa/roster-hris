@@ -16,7 +16,7 @@ use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
-/** S06 (employee side) — own history, correction requests, overtime requests. */
+/** own history, correction requests, overtime requests. */
 class MyAttendanceController extends Controller
 {
     public function __construct(private ApprovalService $approvals, private OvertimeService $overtime) {}

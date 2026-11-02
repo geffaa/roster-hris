@@ -20,7 +20,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Collection;
 
 /**
- * Synthetic time data for M2. Holiday dates are illustrative: Indonesian dates must be checked against
+ * Synthetic time data. Holiday dates are illustrative: Indonesian dates must be checked against
  * the official SKB 3 Menteri for the year, UK dates against gov.uk/bank-holidays.
  */
 class TimeSeeder extends Seeder

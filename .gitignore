@@ -27,3 +27,13 @@ yarn-error.log
 
 /test-results/
 /playwright-report/
+
+# Internal planning and design notes (kept locally, not published)
+/.impeccable/
+/mockups/
+/BREAKDOWN.md
+/PRODUCT.md
+/DESIGN.md
+/docs/*.md
+!/docs/CASE-STUDY.md
+/docs/.breakdown-v1.md

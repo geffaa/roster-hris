@@ -11,7 +11,7 @@ use App\Models\User;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Collection;
 
-/** Basic attendance and leave reports (M2). Managers see their direct reports; HR sees the whole company. */
+/** Basic attendance and leave reports. Managers see their direct reports; HR sees the whole company. */
 class TimeReports
 {
     public function __construct(private WorkCalendar $calendar, private LeaveService $leave) {}

@@ -18,7 +18,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
-/** S05 — the employee's phone screen: clock in/out, today's shift, this week. */
+/** the employee's phone screen: clock in/out, today's shift, this week. */
 class TodayController extends Controller
 {
     public function __construct(private ClockService $clock, private WorkCalendar $calendar, private LeaveService $leave) {}

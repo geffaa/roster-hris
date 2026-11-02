@@ -21,7 +21,7 @@ use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Inertia\Response;
 
-/** S02 — home for HR, payroll and managers: what needs attention today, scoped to what the person may see. */
+/** home for HR, payroll and managers: what needs attention today, scoped to what the person may see. */
 class DashboardController extends Controller
 {
     public function __construct(private CurrentCompany $company, private AttendanceBoard $board, private WorkCalendar $calendar) {}

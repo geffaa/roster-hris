@@ -18,7 +18,7 @@ use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
-/** S13 (time part) — HR maintains work patterns and leave types without a developer. */
+/** HR maintains work patterns and leave types without a developer. */
 class TimeSettingsController extends Controller
 {
     public const COLORS = ['#2E9E8F', '#D9594C', '#7B61D9', '#D45FA0', '#8A9691', '#3E7FD6', '#D99A2B', '#4BA36B'];

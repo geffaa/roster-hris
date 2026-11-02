@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
-/** S07 team calendar — a month of who is off, with public holidays and weekends shaded. */
+/** a month of who is off, with public holidays and weekends shaded. */
 class LeaveCalendarController extends Controller
 {
     public function __construct(private WorkCalendar $calendar, private CurrentCompany $company) {}

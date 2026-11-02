@@ -17,7 +17,7 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
-/** S14 — Insights → Reports: attendance, leave balances, payroll summary, contributions; on screen, CSV and XLSX. */
+/** Insights → Reports: attendance, leave balances, payroll summary, contributions; on screen, CSV and XLSX. */
 class ReportController extends Controller
 {
     private const TIME = ['attendance', 'leave'];

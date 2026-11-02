@@ -73,7 +73,7 @@ class EmployeePolicy
         return $employee->user_id !== null && $employee->user_id === $user->id;
     }
 
-    /** Direct reports only in M1; skip-level visibility arrives with the org chart. */
+    /** Managers see their direct reports. */
     private function manages(User $user, Employee $employee): bool
     {
         $mine = $user->employee?->id;

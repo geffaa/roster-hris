@@ -22,7 +22,7 @@ use Inertia\Response;
 use OwenIt\Auditing\Models\Audit;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-/** S08/S09 — payroll runs: create, calculate, review, approve twice, lock, publish, export. */
+/** payroll runs: create, calculate, review, approve twice, lock, publish, export. */
 class PayrollRunController extends Controller
 {
     public function __construct(private PayrollRuns $runs, private CurrentCompany $company) {}

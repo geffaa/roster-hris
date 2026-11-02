@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
-/** S07 (employee side) — balances, request leave, history, cancel. */
+/** balances, request leave, history, cancel. */
 class TimeOffController extends Controller
 {
     public function __construct(private LeaveService $leave, private WorkCalendar $calendar) {}

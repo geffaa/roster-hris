@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
-/** S06 — who is in today: on time, late, missing, on leave; for HR (company) or managers (team). */
+/** who is in today: on time, late, missing, on leave; for HR (company) or managers (team). */
 class TeamAttendanceController extends Controller
 {
     public function __construct(private AttendanceBoard $board, private CurrentCompany $company) {}

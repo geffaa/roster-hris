@@ -24,7 +24,7 @@ use Inertia\Inertia;
 use Inertia\Response;
 use OwenIt\Auditing\Models\Audit;
 
-/** S13 (audit part) — who changed what and when, for auditors and super admins. */
+/** who changed what and when, for auditors and super admins. */
 class AuditLogController extends Controller
 {
     /** Area label per audited model; also the filter list. */

@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
-/** S12 — the company's rule pack: dated versions, a draft editor with sources, and approval by a second person. */
+/** the company's rule pack: dated versions, a draft editor with sources, and approval by a second person. */
 class RulePackController extends Controller
 {
     public function __construct(private RulePacks $packs, private CurrentCompany $company) {}

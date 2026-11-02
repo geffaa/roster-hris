@@ -13,7 +13,7 @@ use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-/** S10 — an employee's own payslips: list, detail, PDF. Only the owner can open one; others get 404. */
+/** an employee's own payslips: list, detail, PDF. Only the owner can open one; others get 404. */
 class PayslipController extends Controller
 {
     public function index(Request $request): InertiaResponse

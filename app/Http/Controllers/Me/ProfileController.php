@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
-/** S11 "Me": contact details, bank account (changes wait for HR), language. */
+/** Me: contact details, bank account (changes wait for HR), language. */
 class ProfileController extends Controller
 {
     public function __construct(private ApprovalService $approvals) {}

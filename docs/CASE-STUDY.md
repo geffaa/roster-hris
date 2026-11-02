@@ -2,7 +2,7 @@
 
 **Role:** solo full-stack developer (product, design system, backend, frontend, tests)
 **Stack:** Laravel 12, PHP 8.5, PostgreSQL 17, Inertia + Vue 3 (TypeScript), Pest, Playwright, Groq (OpenAI-compatible API)
-**Scope:** six milestones; everything below is in the repository with tests and synthetic demo data.
+**Scope:** everything below is in the repository, with tests and synthetic demo data.
 
 ## The problem
 Growing companies in Indonesia run HR on spreadsheets and a payroll vendor. Leave balances live in chat threads, attendance is a shared sheet, and nobody can say why a payslip changed. The hard part is payroll: Indonesian income tax (PPh 21) moved to monthly effective rates (TER) in 2024 with a year-end recalculation, BPJS contributions have wage caps that change every March, and every number has to be explainable to an employee and to an auditor.
