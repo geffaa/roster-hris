@@ -49,6 +49,7 @@ class Notify
             match ($request->type) {
                 'leave' => route('me.time-off', absolute: false),
                 'bank_change' => route('me.profile', absolute: false),
+                'claim' => route('me.claims', absolute: false),
                 default => route('me.attendance', absolute: false),
             },
             $request->company_id,
@@ -94,6 +95,7 @@ class Notify
             'overtime' => 'overtime request',
             'attendance_correction' => 'attendance correction',
             'bank_change' => 'bank account change',
+            'claim' => 'expense claim',
             default => str_replace('_', ' ', $type),
         };
     }

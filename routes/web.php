@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\TwoFactorController;
+use App\Http\Controllers\ClaimController;
 use App\Http\Controllers\CompanySwitchController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Insights\AuditLogController;
@@ -66,6 +67,9 @@ Route::middleware(['auth', 'company'])->group(function () {
             Route::put('locale', [ProfileController::class, 'locale'])->name('locale');
             Route::get('ask', [AskController::class, 'index'])->name('ask');
             Route::post('ask', [AskController::class, 'store'])->middleware('throttle:20,1')->name('ask.store');
+            Route::get('claims', [ClaimController::class, 'mine'])->name('claims');
+            Route::post('claims', [ClaimController::class, 'store'])->middleware('throttle:20,1')->name('claims.store');
+            Route::delete('claims/{claim}', [ClaimController::class, 'cancel'])->name('claims.cancel');
             Route::get('pay', [PayslipController::class, 'index'])->name('pay');
             Route::get('pay/{payslip}', [PayslipController::class, 'show'])->name('payslip');
             Route::get('pay/{payslip}/pdf', [PayslipController::class, 'pdf'])->middleware('throttle:30,1')->name('payslip.pdf');
@@ -73,6 +77,8 @@ Route::middleware(['auth', 'company'])->group(function () {
 
         // Managers and HR
         Route::get('inbox', [InboxController::class, 'index'])->name('inbox');
+        Route::get('claims', [ClaimController::class, 'index'])->name('claims.index');
+        Route::get('claims/{claim}/receipt', [ClaimController::class, 'receipt'])->name('claims.receipt');
         Route::get('search', SearchController::class)->middleware('throttle:60,1')->name('search');
         Route::get('notifications/{id}', [NotificationController::class, 'open'])->whereUuid('id')->name('notifications.open');
         Route::post('push-subscriptions', [PushSubscriptionController::class, 'store'])->middleware('throttle:10,1')->name('push.store');

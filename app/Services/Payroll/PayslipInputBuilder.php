@@ -2,6 +2,7 @@
 
 namespace App\Services\Payroll;
 
+use App\Models\Claim;
 use App\Models\Company;
 use App\Models\Compensation;
 use App\Models\Employee;
@@ -69,6 +70,13 @@ class PayslipInputBuilder
             }
         }
 
+        // Approved expense claims not yet paid by a locked run: reimbursed, not taxed.
+        $claims = Claim::with('category:id,name')->where('employee_id', $e->id)->where('status', 'approved')
+            ->whereNull('payroll_run_id')->whereDate('spent_on', '<=', $end)->orderBy('spent_on')->get();
+        foreach ($claims as $cl) {
+            $oneOffs[] = ['code' => 'claim_'.$cl->id, 'name' => 'Reimbursement · '.$cl->category->name, 'amount' => (float) $cl->amount, 'kind' => 'earning', 'taxable' => false];
+        }
+
         $unpaid = 0.0;
         $unpaidDates = [];
         $leaves = LeaveRequest::with('type:id,paid')->where('employee_id', $e->id)->where('status', 'approved')
@@ -131,6 +139,7 @@ class PayslipInputBuilder
             'unpaid_dates' => $unpaidDates,
             'overtime_hours' => array_sum(array_column($overtime, 'hours')),
             'one_offs' => array_column($oneOffs, 'name'),
+            'claims' => $claims->pluck('id')->all(),
             'bank' => $e->bank_account_last4 ? ['name' => $e->bank_name, 'last4' => $e->bank_account_last4] : null,
             'employed_days' => $input->employedDays(),
             'period_days' => $input->periodDays,

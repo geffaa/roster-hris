@@ -7,6 +7,7 @@ use App\Models\ApprovalRequest;
 use App\Models\ApprovalStep;
 use App\Models\AttendanceCorrection;
 use App\Models\BankAccountChange;
+use App\Models\Claim;
 use App\Models\Employee;
 use App\Models\LeaveRequest;
 use App\Models\OvertimeRequest;
@@ -121,6 +122,9 @@ class ApprovalService
             return;
         }
         $request->update(['status' => 'cancelled', 'decided_at' => now()]);
+        if ($request->subject instanceof Claim) {
+            $request->subject->update(['status' => 'cancelled']);
+        }
         if ($request->subject instanceof BankAccountChange) {
             $request->subject->update(['status' => 'cancelled']);
         }
@@ -134,6 +138,7 @@ class ApprovalService
         match (true) {
             $subject instanceof LeaveRequest, $subject instanceof OvertimeRequest => $subject->update(['status' => $approved ? 'approved' : 'rejected']),
             $subject instanceof BankAccountChange => $this->applyBankChange($subject, $approved),
+            $subject instanceof Claim => $subject->update(['status' => $approved ? 'approved' : 'rejected']),
             default => $this->applyCorrection($subject, $approved),
         };
     }

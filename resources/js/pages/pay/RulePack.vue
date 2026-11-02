@@ -211,7 +211,7 @@ const fmtVal = (v: unknown) => (v === null || v === undefined ? 'none' : typeof 
             <nav class="modtabs" aria-label="Pay">
                 <Link :href="route('payroll.index')">Payroll runs</Link>
                 <Link :href="route('rule-packs.show')" aria-current="page">Rule packs</Link>
-                <a aria-disabled="true">Claims <span class="soon">Soon</span></a>
+                <Link :href="route('claims.index')">Claims</Link>
             </nav>
 
             <div class="vcards">

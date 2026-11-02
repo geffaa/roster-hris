@@ -3,7 +3,7 @@ import { plainMoney } from '@/composables/useRoster';
 import { useT } from '@/i18n';
 import EmployeeAppLayout from '@/layouts/EmployeeAppLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
-import { ChevronRight, FileText, Wallet } from 'lucide-vue-next';
+import { ChevronRight, FileText, Receipt, Wallet } from 'lucide-vue-next';
 
 interface Slip {
     id: number;
@@ -25,6 +25,12 @@ const dec = (c: string) => (c === 'IDR' ? 0 : 2);
     <EmployeeAppLayout current="pay">
         <div class="hi"><h1>{{ t('pay.title') }}</h1><p>{{ t('pay.sub') }}</p></div>
 
+        <Link :href="route('me.claims')" class="sliprow claimlink">
+            <span class="sr-ic"><Receipt class="icon sm" /></span>
+            <span class="sr-t"><b>{{ t('claims.open') }}</b><small>{{ t('claims.openSub') }}</small></span>
+            <span />
+            <ChevronRight class="icon sm muted" />
+        </Link>
         <template v-if="slips.length">
             <Link :href="route('me.payslip', { payslip: slips[0].id })" class="payhero">
                 <span class="ph-top">{{ t('pay.paid', { month: month(slips[0].period), date: fd(slips[0].pay_date) }) }}<span v-if="slips[0].new" class="newdot">{{ t('pay.new') }}</span></span>

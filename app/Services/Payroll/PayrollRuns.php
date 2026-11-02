@@ -2,6 +2,7 @@
 
 namespace App\Services\Payroll;
 
+use App\Models\Claim;
 use App\Models\Company;
 use App\Models\PayrollItem;
 use App\Models\PayrollRun;
@@ -135,7 +136,12 @@ class PayrollRuns
         if ($run->status !== 'approved' || $run->approvals() < 2) {
             throw ValidationException::withMessages(['run' => 'Two different people must approve before the run can be locked.']);
         }
-        $run->update(['status' => 'locked', 'locked_by' => $by->id, 'locked_at' => now()]);
+        DB::transaction(function () use ($run, $by) {
+            $run->update(['status' => 'locked', 'locked_by' => $by->id, 'locked_at' => now()]);
+            // Claims included in this run are now paid; they will not appear in another run.
+            $ids = $run->items()->get()->flatMap(fn (PayrollItem $i) => $i->context['claims'] ?? [])->all();
+            Claim::whereIn('id', $ids)->update(['status' => 'paid', 'payroll_run_id' => $run->id]);
+        });
     }
 
     public function publish(PayrollRun $run): void

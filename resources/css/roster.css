@@ -923,3 +923,8 @@ a.acard:hover{text-decoration:none;border-color:var(--line-strong)}
 .brief-list{list-style:disc;margin:var(--s4) 0 0;padding-left:20px;display:grid;gap:6px;font-size:15px}
 .brief-note{margin-top:var(--s2)}
 @media (max-width:640px){.brief-h{flex-wrap:wrap}}
+.kpis3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.claimlink{background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);padding:var(--s3) var(--s4)}
+.cl-ic{display:grid;place-items:center;width:28px;height:28px;border-radius:8px;background:var(--brand-soft);color:var(--brand-strong);font-style:normal}
+@media (max-width:640px){.kpis3{grid-template-columns:minmax(0,1fr)}.kpis3 > div{border-left:0 !important}}
+.lr.clr{grid-template-columns:28px minmax(0,1fr) auto}.lr.clr .linkbtn{grid-column:2;justify-self:start}

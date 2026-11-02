@@ -216,7 +216,7 @@ const netDelta = computed(() => (props.previous && props.run.totals ? pct(Number
             <nav class="modtabs" aria-label="Pay">
                 <Link :href="route('payroll.index')" aria-current="page">Payroll runs</Link>
                 <Link :href="route('rule-packs.show')">Rule packs</Link>
-                <a aria-disabled="true">Claims <span class="soon">Soon</span></a>
+                <Link :href="route('claims.index')">Claims</Link>
             </nav>
 
             <section class="card stepper" aria-label="Progress">

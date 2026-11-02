@@ -3,12 +3,12 @@ import Avatar from '@/components/roster/Avatar.vue';
 import { formatDate, formatDateTime } from '@/composables/useRoster';
 import RosterLayout from '@/layouts/RosterLayout.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import { Check, CircleAlert, Clock3, Inbox, Landmark, Plane, Repeat2, Timer, Wrench, X } from 'lucide-vue-next';
+import { Check, CircleAlert, Clock3, Inbox, Landmark, Plane, Receipt, Repeat2, Timer, Wrench, X } from 'lucide-vue-next';
 import { ref } from 'vue';
 
 interface Item {
     step_id: number;
-    type: 'leave' | 'attendance_correction' | 'overtime';
+    type: 'leave' | 'attendance_correction' | 'overtime' | 'bank_change' | 'claim';
     step: number;
     steps: number;
     hr_queue: boolean;
@@ -20,6 +20,7 @@ interface Item {
     reason: string | null;
     color?: string;
     facts: string[];
+    receipt?: string | null;
 }
 
 defineProps<{ items: Item[]; attention: { id: number; employee: string; employee_id: number; date: string; in: string }[] }>();
@@ -38,7 +39,7 @@ function decide(item: Item, decision: 'approve' | 'reject') {
     });
 }
 
-const icon: Record<string, unknown> = { leave: Plane, attendance_correction: Wrench, overtime: Timer, bank_change: Landmark };
+const icon: Record<string, unknown> = { leave: Plane, attendance_correction: Wrench, overtime: Timer, bank_change: Landmark, claim: Receipt };
 </script>
 
 <template>
@@ -76,6 +77,7 @@ const icon: Record<string, unknown> = { leave: Plane, attendance_correction: Wre
                                 <blockquote v-if="item.reason">“{{ item.reason }}”</blockquote>
                                 <ul v-if="item.facts.length" class="facts">
                                     <li v-for="f in item.facts" :key="f">{{ f }}</li>
+                                    <li v-if="item.receipt"><a :href="item.receipt" target="_blank" rel="noopener">View receipt</a></li>
                                 </ul>
                             </div>
                         </div>

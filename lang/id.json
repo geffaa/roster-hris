@@ -55,5 +55,15 @@
     "Meal & transport allowance": "Uang makan & transport",
     "Position allowance": "Tunjangan jabatan",
     "Performance bonus": "Bonus kinerja",
-    "Salary advance repayment": "Cicilan kasbon"
+    "Salary advance repayment": "Cicilan kasbon",
+    "Claims are for money already spent.": "Klaim hanya untuk uang yang sudah dikeluarkan.",
+    "Claims must be sent within 90 days of spending.": "Klaim harus dikirim paling lambat 90 hari setelah pengeluaran.",
+    "Add a photo of the receipt for :category.": "Tambahkan foto struk untuk :category.",
+    ":category is limited to :limit a month; :left is left for :month.": ":category dibatasi :limit per bulan; sisa :left untuk :month.",
+    "Claim sent to your manager. Once approved it is paid with the next payroll.": "Klaim terkirim ke atasan. Setelah disetujui, dibayar bersama gaji berikutnya.",
+    "Claim withdrawn.": "Klaim ditarik kembali.",
+    "I couldn't find this in the company's HR policies, so I won't guess. Ask HR directly, or rephrase with the policy topic (leave, attendance, overtime, payroll).": "Saya tidak menemukan ini di kebijakan HR perusahaan, jadi saya tidak akan menebak. Tanyakan langsung ke HR, atau ulangi dengan topik kebijakan (cuti, absensi, lembur, gaji).",
+    "The AI assistant is unavailable right now, so these are the closest matching passages.": "Asisten AI sedang tidak tersedia, jadi ini potongan kebijakan yang paling cocok.",
+    "AI answers are not switched on for this demo, so these are the closest matching passages.": "Jawaban AI tidak dinyalakan di demo ini, jadi ini potongan kebijakan yang paling cocok.",
+    "Reimbursement · Client meals": "Penggantian · Makan klien"
 }

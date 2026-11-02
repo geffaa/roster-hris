@@ -77,7 +77,7 @@ const groups = computed<Group[]>(() => [
         subs: [
             ...(can('payroll.view') ? [{ name: 'Payroll', href: route('payroll.index') }] : []),
             ...(can('payroll.view') || can('rule_packs.manage') ? [{ name: 'Rule packs', href: route('rule-packs.show') }] : []),
-            { name: 'Claims', soon: 'P2' },
+            ...(can('payroll.view') || can('employees.manage') ? [{ name: 'Claims', href: route('claims.index') }] : []),
         ],
     },
     { name: 'Talent', icon: Briefcase, soon: true, subs: [{ name: 'Recruitment', soon: 'P2' }, { name: 'Performance', soon: 'P2' }] },

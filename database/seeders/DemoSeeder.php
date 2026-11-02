@@ -45,6 +45,7 @@ class DemoSeeder extends Seeder
 
         $this->call(TimeSeeder::class);
         $this->call(PayrollSeeder::class);
+        $this->call(ClaimSeeder::class);
         $this->call(ActivitySeeder::class);
         $this->call(PolicySeeder::class);
 

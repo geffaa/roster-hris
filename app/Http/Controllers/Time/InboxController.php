@@ -8,6 +8,8 @@ use App\Models\ApprovalStep;
 use App\Models\AttendanceCorrection;
 use App\Models\AttendanceRecord;
 use App\Models\BankAccountChange;
+use App\Models\Claim;
+use App\Models\Company;
 use App\Models\Employee;
 use App\Models\LeaveRequest;
 use App\Services\Time\ApprovalService;
@@ -114,6 +116,13 @@ class InboxController extends Controller
 
         return $base + match (true) {
             $subject instanceof LeaveRequest => $this->leaveDetail($subject),
+            $subject instanceof Claim => [
+                'title' => 'Expense claim · '.$subject->category()->withoutGlobalScopes()->value('name'),
+                'summary' => sprintf('%s · %s %s', $subject->spent_on->format('D j M'), Company::findOrFail($subject->company_id)->base_currency, number_format((float) $subject->amount, 2)),
+                'reason' => $subject->description,
+                'facts' => [$subject->receipt_path ? 'Receipt attached' : 'No receipt', 'Paid with the next payroll'],
+                'receipt' => $subject->receipt_path ? route('claims.receipt', $subject->id) : null,
+            ],
             $subject instanceof BankAccountChange => [
                 'title' => 'Bank account change',
                 'summary' => sprintf('%s ···· %s → %s ···· %s', $request->requester->bank_name ?? 'None', $request->requester->bank_account_last4 ?? '—', $subject->bank_name, $subject->account_last4),
