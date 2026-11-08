@@ -14,6 +14,9 @@ use InvalidArgumentException;
  */
 final class TerMonthlyWithTrueUp implements TaxStrategy
 {
+    /** PTKP status codes: TK or K with 0–3 dependants (UU PPh Pasal 7 ayat (1)). */
+    public const STATUS_PATTERN = '#^(TK|K)/([0-3])$#';
+
     public function compute(PayslipInput $in, RulePackSnapshot $pack, int $taxBruto, int $deductible): array
     {
         $c = $pack->config;
@@ -80,7 +83,7 @@ final class TerMonthlyWithTrueUp implements TaxStrategy
     /** @param array{base: int, married: int, per_dependant: int, max_dependants: int} $ptkp */
     public static function ptkp(string $status, array $ptkp): int
     {
-        if (! preg_match('#^(TK|K)/([0-3])$#', $status, $m)) {
+        if (! preg_match(self::STATUS_PATTERN, $status, $m)) {
             throw new InvalidArgumentException("Unknown PTKP status {$status}.");
         }
 

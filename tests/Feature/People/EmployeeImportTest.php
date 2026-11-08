@@ -72,6 +72,18 @@ it('imports a clean file, links managers listed later, and records salaries', fu
         ->and($bagus->compensations()->first()->currency)->toBe('IDR');
 });
 
+it('flags a tax status that payroll cannot use', function () {
+    $file = csvFile([
+        $this->header,
+        ['NK-0104', 'Dewi Lestari', 'Analyst', '2025-02-03', '', 'Engineering', '', '', 'permanent', '12000000', 'K1'],
+    ]);
+
+    $token = previewToken(signIn($this->hr)->post(route('employees.import.preview'), ['file' => $file]));
+
+    $this->get(route('employees.import.show', $token))->assertInertia(fn (Assert $page) => $page
+        ->where('preview.rows.0.errors', ['Tax status must be a PTKP code such as TK/0 or K/1.']));
+});
+
 it('rejects files without required columns', function () {
     $file = csvFile([['name', 'email'], ['A', 'a@example.id']]);
 
