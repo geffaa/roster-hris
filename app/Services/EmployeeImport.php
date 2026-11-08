@@ -7,6 +7,7 @@ use App\Models\Department;
 use App\Models\Employee;
 use App\Models\Location;
 use App\Models\User;
+use App\Payroll\Tax\TerMonthlyWithTrueUp;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -164,6 +165,10 @@ class EmployeeImport
                 }
             } else {
                 $warnings[] = 'No salary given; add it on the profile before payroll.';
+            }
+
+            if ($data['tax_status'] !== '' && $company->country_code === 'ID' && ! preg_match(TerMonthlyWithTrueUp::STATUS_PATTERN, $data['tax_status'])) {
+                $errors[] = 'Tax status must be a PTKP code such as TK/0 or K/1.';
             }
 
             $result[] = ['line' => $i + 2, 'data' => $data, 'errors' => $errors, 'warnings' => $warnings];
