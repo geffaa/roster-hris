@@ -105,7 +105,14 @@ class PayslipInputBuilder
 
         $leavingOn = $e->end_date && $e->end_date->betweenIncluded($start, $end) ? $e->end_date->toDateString() : null;
         $leaving = $leavingOn !== null;
-        $taxStatus = $current?->tax_status ?: ($company->country_code === 'ID' ? 'TK/0' : '');
+        // Indonesia: PTKP follows the status at the start of the tax year, or at hire for a mid-year joiner
+        // (UU PPh Pasal 7 ayat (2)). A change recorded later in the year applies from the next January.
+        $statusRow = $current;
+        if ($company->country_code === 'ID') {
+            $statusDate = $start->startOfYear()->max(CarbonImmutable::parse($e->hire_date->toDateString()));
+            $statusRow = $history->last(fn (Compensation $c) => $c->effective_from->lessThanOrEqualTo($statusDate)) ?? $history->first();
+        }
+        $taxStatus = $statusRow?->tax_status ?: ($company->country_code === 'ID' ? 'TK/0' : '');
 
         $input = new PayslipInput(
             periodLabel: $start->format('F Y'),
