@@ -69,6 +69,20 @@ it('uses the rule pack version in force for each month', function () {
         ->and($mar->rulePackVersion->version)->toBe('ID-2026.2')->and($jp($mar))->toBe(-110_863);
 });
 
+it('keeps the PTKP status from the start of the tax year until next January', function () {
+    $e = hire($this->t['company'], 6_250_000, 'TK/1');
+    $e->compensations()->create(['effective_from' => '2026-06-15', 'base_salary' => 6_250_000, 'currency' => 'IDR', 'tax_status' => 'K/1', 'reason' => 'Married']);
+    $item = fn (PayrollRun $r) => PayrollItem::where('payroll_run_id', $r->id)->where('employee_id', $e->id)->sole();
+
+    // UU PPh Pasal 7 ayat (2): still TK/1 for 2026. Bruto 6,533,750 → TER A 1% = 65,337 (TER B would be 0.5%).
+    $oct = closeMonth(10);
+    expect($item($oct)->context['tax_status'])->toBe('TK/1')->and((float) $item($oct)->tax)->toBe(65_337.0);
+
+    // From January 2027 the K/1 status applies: TER B 0.5% = 32,668.
+    $jan = $this->runs->calculate($this->runs->create($this->t['company'], CarbonImmutable::create(2027, 1, 1), false, $this->t['officer']));
+    expect($item($jan)->context['tax_status'])->toBe('K/1')->and((float) $item($jan)->tax)->toBe(32_668.0);
+});
+
 it('needs two different people to approve before the run can be locked', function () {
     hire($this->t['company'], 10_000_000);
     $run = $this->runs->calculate($this->runs->create($this->t['company'], CarbonImmutable::create(2026, 10, 1), false, $this->t['officer']));
